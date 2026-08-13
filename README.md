@@ -61,6 +61,28 @@ O Guerreiro é a classe inicial jogável que herda todas as características de 
 ### `Guerreiro : Personagem` (Classe Filha)
 - Instancia o herói definindo os atributos base iniciais via construtor `Guerreiro(nome : string)`.
 
+### `Mob` (Classe Base dos Inimigos)
+- **Atributos Protegidos (`protected`):**
+  - `vida : int`
+  - `dano : int`
+  - `chanCritico : float`
+  - `chanEvasao : float`
+- **Métodos:**
+  - `Atacar() : int` — Calcula e retorna o dano causado ao jogador.
+  - `Critico() : bool` — Valida se o ataque atual é crítico.
+  - `ReceberDano(dano : int) : bool` — Aplica o dano recebido pelo herói considerando a chance de evasão do monstro (retorna `true` se desviou).
+
+### `Esqueleto : Mob` (Classe Filha)
+- Define os atributos base do Esqueleto via construtor `Esqueleto(multiplicadorVida : double)`:
+  - Foco em dano consistente e HP moderado (ajustado pelo escalonamento por turno).
+
+### `Goblin : Mob` (Classe Filha)
+- Define os atributos base do Goblin via construtor `Goblin(multiplicadorVida : double)`:
+  - Foco em maior chance de evasão (`chanEvasao`) e dano variável.
+
+### `GoblinHeroi : Mob` (Classe Filha - BOSS)
+- Define os atributos base do chefe via construtor `GoblinHeroi(multiplicadorVida : double)`:
+  - Atributos massivos de HP e dano elevado para os turnos múltiplos de 5.
 ---
 
 ## 🛠️ Tecnologias Utilizadas
