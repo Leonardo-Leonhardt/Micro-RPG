@@ -83,6 +83,20 @@ O Guerreiro é a classe inicial jogável que herda todas as características de 
 ### `GoblinHeroi : Mob` (Classe Filha - BOSS)
 - Define os atributos base do chefe via construtor `GoblinHeroi(multiplicadorVida : double)`:
   - Atributos massivos de HP e dano elevado para os turnos múltiplos de 5.
+ 
+### `GerenciadorJogo` (Controlador da Partida)
+- **Atributos Privados (`private`):**
+  - `_jogador : Guerreiro`
+  - `_hordaInimigos : List<Mob>`
+  - `_turnoAtual : int`
+  - `_multiplicadorVida : double`
+- **Métodos:**
+  - `IniciarPartida() : void` — Instancia o jogador, configura o estado inicial e inicia o loop principal.
+  - `ExecutarTurno() : void` — Controla o fluxo de evolução do jogador, spawn de horda, combate e regeneração.
+  - `VerificarGameOver() : bool` — Retorna `true` caso a vida do jogador chegue a zero.
+  - `VerificarTurno() : int` — Retorna o número do turno atual.
+  - `CriarMobs() : List<Mob>` — Instancia e retorna a horda de monstros com base no turno atual, aplicando a regra do Boss a cada 5 turnos e limite de até 5 inimigos.
+
 ---
 
 ## 🛠️ Tecnologias Utilizadas
