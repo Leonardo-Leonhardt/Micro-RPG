@@ -1,29 +1,43 @@
 # ⚔️ Mini RPG de Terminal
 
-Um jogo de combate por turnos simples desenvolvido em **C#** via Console App, focado na progressão contínua e no combate contra ondas de monstros que ficam mais fortes com o tempo.
+Um jogo de combate por turnos simples desenvolvido em **C#** via Console App, focado em sobrevivência, progressão contínua e gerenciamento de múltiplos inimigos simultâneos.
 
 ---
 
 ## 📑 Sobre o Projeto
 
-O objetivo do jogador é sobreviver ao maior número de combates possível. O jogo conta com um sistema de evolução rápida: a cada turno, o jogador melhora seus atributos, enquanto os inimigos ficam progressivamente mais resistentes.
+O objetivo do jogador é sobreviver ao maior número de turnos possível. O jogo conta com um sistema de escolha de classes e evolução por sorte (RNG), enfrentando hordas que ficam progressivamente mais populosas e resistentes.
 
-### ⚖️ Mecânicas do Jogo
+---
 
-- **Evolução por Turno:** A cada turno, o jogador escolhe aumentar **+1 de HP Máximo** ou **+1 de Dano**.
-- **Regeneração:** Ao final do turno, o jogador recupera **50% do seu HP atual**.
-- **Escalonamento de Inimigos:** A vida base de todos os inimigos aumenta em **10% por turno**.
-- **Multiplicação de Inimigos:** A cada **10 turnos**, um novo inimigo é adicionado ao combate simultaneamente, até o limite máximo de **5 inimigos por turno**:
+## 🛡️ Classe Inicial: Guerreiro
+
+- **Dano Base:** 2 a 5 (gerado aleatoriamente a cada ataque).
+- **Crítico:** 10% de chance de causar Dano Crítico.
+- **Bônus de Sorte:** Ao escolher evoluir Vida, o jogador tem **0.10% de chance** (1 em 1000) de ganhar **+2 de HP Máximo** em vez de apenas +1.
+
+---
+
+## ⚖️ Mecânicas Gerais
+
+- **Evolução por Turno:** A cada turno, o jogador escolhe:
+  - `1` - **+1 HP Máximo** (com 0.10% de chance de virar +2).
+  - `2` - **+1 Dano Base**.
+- **Regeneração:** Ao final de cada turno vencido, o jogador recupera **50% do seu HP atual**.
+- **Escalonamento de Inimigos:** A vida base de todos os monstros aumenta em **10% por turno**.
+- **Multiplicação de Inimigos:** A cada **10 turnos**, um novo inimigo surge na horda (limite de **5 simultâneos**):
   - Turnos 1–9: 1 inimigo
   - Turnos 10–19: 2 inimigos
   - Turnos 20–29: 3 inimigos
   - Turnos 30–39: 4 inimigos
-  - Turnos 40+: **5 inimigos max!**
+  - Turnos 40+: 5 inimigos
 
-### 👾 Elenco de Inimigos
+---
 
-- **Monstros Comuns (Turnos 1-4, 6-9...):** 
-  - 💀 **Esqueleto:** Dano moderado e vida base padronizada.
+## 👾 Elenco de Inimigos
+
+- **Monstros Comuns:** 
+  - 💀 **Esqueleto:** Dano moderado e vida padronizada.
   - 👺 **Goblin:** Ataques rápidos e alta variabilidade.
 - **Chefe (A cada 5 turnos):**
   - 👑 **Goblin Herói:** Surge com vida e dano significativamente elevados pelo escalonamento!
@@ -33,7 +47,7 @@ O objetivo do jogador é sobreviver ao maior número de combates possível. O jo
 ## 🛠️ Tecnologias Utilizadas
 
 * **Linguagem:** C#
-* **Plataforma:** .NET 8.0
+* **Plataforma:** .NET 10.0
 * **Ambiente:** Console Application
 
 ---
@@ -48,5 +62,3 @@ O objetivo do jogador é sobreviver ao maior número de combates possível. O jo
 1. **Clone o repositório:**
    ```bash
    git clone https://github.com/Leonardo-Leonhardt/Micro-RPG.git
-
-   
