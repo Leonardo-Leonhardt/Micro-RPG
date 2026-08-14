@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace Micro_RPG.Models;
 
@@ -46,5 +47,19 @@ public abstract class Entidade
             return true;
         }
         return false;
+    }
+
+    protected virtual void AdicionarMaxHp(StringBuilder sb) { }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine($"HP: {_vida}");
+        AdicionarMaxHp(sb);
+        sb.AppendLine($"Attack: {_dano}"); 
+        sb.AppendLine($"Critical Chance: {_chanCritico * 100}%");
+        sb.AppendLine($"Evasion Chance: {_chanEvasao * 100}%");
+
+        return sb.ToString();
     }
 }
