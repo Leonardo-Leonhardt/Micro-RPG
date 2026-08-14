@@ -64,8 +64,8 @@ Classe fundamental que centraliza os atributos e regras de combate compartilhado
 - **Atributos Protegidos (`protected`):**
   - `_vida : int`
   - `_dano : int`
-  - `_chanCritico : float`
-  - `_chanEvasao : float`
+  - `_chanCritico : double`
+  - `_chanEvasao : double`
 - **Métodos:**
   - `Atacar() : int` — Calcula o dano base e aplica multiplicador de dano crítico caso ativado.
   - `Critico() : bool` — Valida se o ataque atual resultou em acerto crítico com base em `_chanCritico`.
@@ -80,13 +80,12 @@ Classe fundamental que centraliza os atributos e regras de combate compartilhado
 Especialização de `Entidade` voltada exclusivamente para entidades controladas pelo jogador, contendo mecânicas de sustentação e evolução contínua.
 - **Atributos Protegidos (`protected`):**
   - `_vidaMax : int`
-  - `_recuperaVida : float` (taxa percentual de cura por turno, padrão: `0.50f`)
 - **Métodos:**
   - `AumentarVidaMax(upVida : int) : void` — Incrementa a vida máxima com chance de bônus de sorte extra (0.10%).
   - `RecuperaVida() : void` — Regenera a vida atual com base no multiplicador `_recuperaVida`.
 
 #### `Guerreiro : Personagem` (Classe Filha)
-- **Construtor:** `Guerreiro(nome : string)` — Define os atributos base do herói inicial (vida máxima, variação de dano de 2 a 5, 10% de crítico e 5% de evasão).
+- **Construtor:** `Guerreiro(nome : string)` — Define os atributos base do herói inicial (vida máxima, variação de dano de 2 a 5, 10% de crítico, 5% de evasão 50% de recuperação de vida por turno).
 
 ---
 
@@ -94,7 +93,7 @@ Especialização de `Entidade` voltada exclusivamente para entidades controladas
 
 #### `Mob : Entidade` (Classe Base dos Inimigos)
 Especialização de `Entidade` para criaturas hostis geradas pelo jogo.
-- **Construtor:** `Mob(nome : string, vida : int, dano : int, chanCritico : float, chanEvasao : float)` — Repassa os valores ajustados pelo turno para a base `Entidade`.
+- **Construtor:** `Mob(nome : string, vida : int, dano : int, chanCritico : double, chanEvasao : double)` — Repassa os valores ajustados pelo turno para a base `Entidade`.
 
 #### `Goblin : Mob` (Classe Filha)
 - **Construtor:** `Goblin(multiplicadorVida : double)` — Instancia um monstro focado em velocidade, com HP moderado, dano leve e maior chance de evasão (`15%`).
