@@ -65,7 +65,6 @@ public abstract class Entidade
         return false;
     }
 
-
     public int Vida => _vida;
     public string Nome => _nome;
 
