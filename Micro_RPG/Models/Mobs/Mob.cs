@@ -1,9 +1,9 @@
 ﻿using System;
+using Micro_RPG.Models;
 
+public class Mob : Entidade
+{
 
-public class Mob
-{ 
-  
+    protected override void AdicionarMaxHp(StringBuilder sb) { }
 
-   
 }

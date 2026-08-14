@@ -1,6 +1,7 @@
 ﻿using System;
+using Micro_RPG.Models;
 
-public class Guerreiro 
+public class Guerreiro : Personagem
 {
 	public Guerreiro()
 	{

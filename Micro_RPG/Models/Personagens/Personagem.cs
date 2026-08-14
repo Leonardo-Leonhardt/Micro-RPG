@@ -2,8 +2,6 @@
 using System.Text;
 using Micro_RPG.Models;
 
-namespace Micro_RPG.Models.Personagens;
-
 public class Personagem : Entidade
 {
 
@@ -43,8 +41,8 @@ public class Personagem : Entidade
         }
     }
 
-    public override string ToString()
+    protected override void AdicionarMaxHp(StringBuilder sb)
     {
-        
+        sb.AppendLine($"Max HP: {_vidaMax}");
     }
 }
