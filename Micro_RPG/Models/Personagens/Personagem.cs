@@ -25,6 +25,18 @@ public abstract class Personagem : Entidade
         _vidaMax += upVida;
     }
 
+    public void RecuparaVida()
+    {
+        if(_vida < _vidaMax)
+        {
+            int cura = (int)(_vidaMax * _recuperaVida);
+
+            cura = Math.Max(1, cura);
+
+            _vida = Math.Min(_vidaMax, _vida + cura);
+        }
+    }
+
     public void AumentarDano(int upDano)
     {
         _dano += upDano;
@@ -50,3 +62,5 @@ public abstract class Personagem : Entidade
         sb.AppendLine($"Class: {_nome}");
     }   
 }
+
+    
