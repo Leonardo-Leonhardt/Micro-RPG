@@ -5,12 +5,22 @@ namespace Micro_RPG.Models;
 
 public abstract class Entidade
 {
+    protected string _nome;
     protected int _vida;
     protected int _dano;
-    protected double _chanCritico = 0.10;
-    protected double _chanEvasao = 0.05;
+    protected double _chanCritico;
+    protected double _chanEvasao;
 
-    public int Atacar()
+    protected Entidade(string nome, int vida, int dano, double chanCritico, double chanEvasao)
+    {
+        _nome = nome;
+        _vida = vida;
+        _dano = dano;
+        _chanCritico = chanCritico;
+        _chanEvasao = chanEvasao;
+    }
+
+    public virtual int Atacar()
     {
         if (Critico())
         {
@@ -25,6 +35,12 @@ public abstract class Entidade
         if (!Evasao())
         {
             _vida -= dano;
+
+            if (_vida < 0)
+            {
+                _vida = 0;
+            }
+
             return true;
         }
 
@@ -49,14 +65,20 @@ public abstract class Entidade
         return false;
     }
 
+
+    public int Vida => _vida;
+    public string Nome => _nome;
+
     protected virtual void AdicionarMaxHp(StringBuilder sb) { }
+    protected virtual void AdicionarNome(StringBuilder sb) { }
 
     public override string ToString()
     {
         StringBuilder sb = new StringBuilder();
+        AdicionarNome(sb);
         sb.AppendLine($"HP: {_vida}");
         AdicionarMaxHp(sb);
-        sb.AppendLine($"Attack: {_dano}"); 
+        sb.AppendLine($"Attack: {_dano}");
         sb.AppendLine($"Critical Chance: {_chanCritico * 100}%");
         sb.AppendLine($"Evasion Chance: {_chanEvasao * 100}%");
 

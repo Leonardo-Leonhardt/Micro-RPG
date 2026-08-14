@@ -2,33 +2,32 @@
 using System.Text;
 using Micro_RPG.Models;
 
-public class Personagem : Entidade
+public abstract class Personagem : Entidade
 {
 
     protected int _vidaMax;
-    protected double _recuperaVida = 0.50;
+    protected double _recuperaVida;
 
-
-    public Personagem()
+    protected Personagem(string nome, int vida, int dano, double chanCritico, double chanEvasao, double recuperaVida)
+        : base(
+            nome,
+            vida,
+            dano,
+            chanCritico,
+            chanEvasao)
     {
-        _vidaMax = 10;
-        _dano = 20;
+        _vidaMax = vida;
+        _recuperaVida = recuperaVida;
     }
 
-    public bool ReceberDano(int dano)
+    public void AumentarVidaMax(int upVida)
     {
-        if (!Evasao())
-        {
-            _vida -= dano;
-            return true;
-        }
-
-        return false;
+        _vidaMax += upVida;
     }
 
-    public void AumentarVidaMax(int quantidade)
+    public void AumentarDano(int upDano)
     {
-        _vidaMax += quantidade;
+        _dano += upDano;
     }
 
     public void AumentarVida()
@@ -45,4 +44,9 @@ public class Personagem : Entidade
     {
         sb.AppendLine($"Max HP: {_vidaMax}");
     }
+
+    protected override void AdicionarNome(StringBuilder sb)
+    {
+        sb.AppendLine($"Class: {_nome}");
+    }   
 }
