@@ -19,20 +19,35 @@ O Guerreiro é a classe inicial jogável que herda todas as características de 
 - **Atributos Especiais:**
   - **Chance de Crítico (`chanCritico`):** 10% de chance de dobrar o dano.
   - **Chance de Evasão (`chanEvasao`):** 5% de chance de se esquivar totalmente de um ataque recebido.
-- **Bônus de Sorte:** Ao evoluir vida, há **0.5% de chance** de ganhar **+2 de HP Máximo** em vez de +1.
 ---
 
-  ## ⚖️ Mecânicas de Jogo & Escalabilidade
+## ⚖️ Mecânicas de Jogo & Escalabilidade
 
-- **Evolução por Turno:** O jogador escolhe a cada turno aumentar **+1 HP Máximo** ou **+1 Dano**.
-- **Regeneração:** Método `RecuperaVida()` restaura **50% do HP atual** após vencer o turno.
-- **Escalonamento de Inimigos:** Inimigos ganham **+10% de HP por turno**.
-- **Multiplicação de Inimigos (Horda):** A cada **10 turnos**, surge +1 inimigo no combate (máximo 5 simultâneos):
-  - Turnos 1–9: 1 inimigo
-  - Turnos 10–19: 2 inimigos
-  - Turnos 20–29: 3 inimigos
-  - Turnos 30–39: 4 inimigos
-  - Turnos 40+: 5 inimigos
+- **Evolução por Turno (Jogador):** A cada turno comum vencido, o jogador escolhe aprimorar **HP Máximo** ou **Dano**. O ganho base é **+2**, com chances de sorte crítica (*RNG*):
+  - **Ganho Padrão:** +2 (Base)
+  - **Sorte Rara (5% de chance - `0.05`):** +3
+  - **Sorte Lendária (0.01% de chance - `0.0001`):** +4
+
+- **Regeneração por Turno:** 
+  - **Padrão:** Restaura **50% do HP atual**.
+  - **Cura Milagrosa (0.01% de chance - `0.0001`):** Restaura **100% da Vida Máxima**!
+
+- **Recompensa de Chefe (Ao derrotar o GoblinBoss a cada 5 turnos):**
+  - ❤️‍🩹 **Cura Total Garantida:** Restaura **100% do HP Máximo** instantaneamente.
+  - 🎁 **Drop Duplo:** O jogador recebe **ambos os aprimoramentos** (+HP Máximo E +Dano) no mesmo turno, rodando as chances de sorte crítica para cada um.
+
+- **Identidade e Escalonamento dos Inimigos (Mobs):**
+  - 👺 **Goblin (Tank):** Foco em resistência. A cada turno ganha **+10 de Vida Máxima**.
+  - 💀 **Esqueleto (Ataque/DPS):** Foco em dano. A cada turno ganha **+5 de Vida Máxima** e **+1 de Dano**.
+  - 👑 **GoblinBoss (Chefe):** Combina alta vida, dano elevado e 20% de chance de acerto crítico.
+
+- **Multiplicação de Inimigos (Horda):** A cada **10 turnos**, surge +1 inimigo no combate (limite máximo de 5 monstros simultâneos):
+  - **Turnos 1–9:** 1 inimigo
+  - **Turnos 10–19:** 2 inimigos
+  - **Turnos 20–29:** 3 inimigos
+  - **Turnos 30–39:** 4 inimigos
+  - **Turnos 40+:** 5 inimigos
+ 
 ---
 
 ## 👾 Elenco de Inimigos	
