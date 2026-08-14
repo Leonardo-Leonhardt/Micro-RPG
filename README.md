@@ -44,60 +44,69 @@ O Guerreiro é a classe inicial jogável que herda todas as características de 
 
   ## 📐 Estrutura de Classes (UML)
 
-### `Personagem` (Classe Base)
+### `Entidade` (Classe Abstrata Base)
+Classe fundamental que centraliza os atributos e regras de combate compartilhados por todas as criaturas do jogo.
 - **Atributos Protegidos (`protected`):**
-  - `vidaMax : int`
-  - `vida : int`
-  - `dano : int`
-  - `chanCritico : float`
-  - `chanEvasao : float`
+  - `_vida : int`
+  - `_dano : int`
+  - `_chanCritico : float`
+  - `_chanEvasao : float`
 - **Métodos:**
-  - `Atacar() : int` — Calcula e retorna o dano causado.
-  - `Critico() : bool` — Valida se o ataque atual é crítico.
-  - `ReceberDano(dano : int) : bool` — Aplica dano considerando a chance de evasão (retorna `true` se desviou).
-  - `AumentarVidaMax() : void` — Incrementa a vida máxima (com checagem de sorte).
-  - `RecuperaVida() : void` — Regenera 50% da vida atual do personagem.
+  - `Atacar() : int` — Calcula o dano base e aplica multiplicador de dano crítico caso ativado.
+  - `Critico() : bool` — Valida se o ataque atual resultou em acerto crítico com base em `_chanCritico`.
+  - `Evasao() : bool` — Checa se a entidade conseguiu se esquivar do golpe com base em `_chanEvasao`.
+  - `ReceberDano(dano : int) : bool` — Processa o dano recebido após testar a evasão (retorna `true` se desviou ou `false` se foi atingida).
 
-### `Guerreiro : Personagem` (Classe Filha)
-- Instancia o herói definindo os atributos base iniciais via construtor `Guerreiro(nome : string)`.
+---
 
-### `Mob` (Classe Base dos Inimigos)
+### 🛡️ Hierarquia do Jogador
+
+#### `Personagem : Entidade` (Classe Base de Heróis)
+Especialização de `Entidade` voltada exclusivamente para entidades controladas pelo jogador, contendo mecânicas de sustentação e evolução contínua.
 - **Atributos Protegidos (`protected`):**
-  - `vida : int`
-  - `dano : int`
-  - `chanCritico : float`
-  - `chanEvasao : float`
+  - `_vidaMax : int`
+  - `_recuperaVida : float` (taxa percentual de cura por turno, padrão: `0.50f`)
 - **Métodos:**
-  - `Atacar() : int` — Calcula e retorna o dano causado ao jogador.
-  - `Critico() : bool` — Valida se o ataque atual é crítico.
-  - `ReceberDano(dano : int) : bool` — Aplica o dano recebido pelo herói considerando a chance de evasão do monstro (retorna `true` se desviou).
+  - `AumentarVidaMax(upVida : int) : void` — Incrementa a vida máxima com chance de bônus de sorte extra (0.10%).
+  - `RecuperaVida() : void` — Regenera a vida atual com base no multiplicador `_recuperaVida`.
 
-### `Esqueleto : Mob` (Classe Filha)
-- Define os atributos base do Esqueleto via construtor `Esqueleto(multiplicadorVida : double)`:
-  - Foco em dano consistente e HP moderado (ajustado pelo escalonamento por turno).
+#### `Guerreiro : Personagem` (Classe Filha)
+- **Construtor:** `Guerreiro(nome : string)` — Define os atributos base do herói inicial (vida máxima, variação de dano de 2 a 5, 10% de crítico e 5% de evasão).
 
-### `Goblin : Mob` (Classe Filha)
-- Define os atributos base do Goblin via construtor `Goblin(multiplicadorVida : double)`:
-  - Foco em maior chance de evasão (`chanEvasao`) e dano variável.
+---
 
-### `GoblinHeroi : Mob` (Classe Filha - BOSS)
-- Define os atributos base do chefe via construtor `GoblinHeroi(multiplicadorVida : double)`:
-  - Atributos massivos de HP e dano elevado para os turnos múltiplos de 5.
- 
-### `GerenciadorJogo` (Controlador da Partida)
+### 👾 Hierarquia dos Monstros
+
+#### `Mob : Entidade` (Classe Base dos Inimigos)
+Especialização de `Entidade` para criaturas hostis geradas pelo jogo.
+- **Construtor:** `Mob(nome : string, vida : int, dano : int, chanCritico : float, chanEvasao : float)` — Repassa os valores ajustados pelo turno para a base `Entidade`.
+
+#### `Goblin : Mob` (Classe Filha)
+- **Construtor:** `Goblin(multiplicadorVida : double)` — Instancia um monstro focado em velocidade, com HP moderado, dano leve e maior chance de evasão (`15%`).
+
+#### `Esqueleto : Mob` (Classe Filha)
+- **Construtor:** `Esqueleto(multiplicadorVida : double)` — Instancia um monstro equilibrado, com HP intermediário e dano consistente.
+
+#### `GoblinBoss : Mob` (Classe Filha - BOSS)
+- **Construtor:** `GoblinBoss(multiplicadorVida : double)` — Instancia o chefe da horda (aparece a cada 5 turnos), com multiplicador expressivo de vida, dano elevado e 20% de chance de acerto crítico.
+
+---
+
+### 🎮 Controle de Jogo
+
+#### `GerenciadorJogo` (Controlador da Partida)
+Responsável por gerenciar o ciclo de vida do jogo, agregação das entidades e execução dos turnos.
 - **Atributos Privados (`private`):**
-  - `_jogador : Guerreiro`
+  - `_jogador : Guerreiro` (ou `Personagem`)
   - `_hordaInimigos : List<Mob>`
   - `_turnoAtual : int`
   - `_multiplicadorVida : double`
 - **Métodos:**
-  - `IniciarPartida() : void` — Instancia o jogador, configura o estado inicial e inicia o loop principal.
-  - `ExecutarTurno() : void` — Controla o fluxo de evolução do jogador, spawn de horda, combate e regeneração.
-  - `VerificarGameOver() : bool` — Retorna `true` caso a vida do jogador chegue a zero.
+  - `IniciarPartida() : void` — Inicializa o herói, zera o contador de turnos e roda o loop principal.
+  - `ExecutarTurno() : void` — Executa o ciclo de evolução do herói, instanciação da horda, rodada de combates e cura final.
+  - `CriarMobs() : List<Mob>` — Instancia e retorna a lista de inimigos do turno, calculando a quantidade (até o teto de 5) e escalonando o HP (+10% por turno).
+  - `VerificarGameOver() : bool` — Retorna `true` caso o HP do jogador seja $\le 0$.
   - `VerificarTurno() : int` — Retorna o número do turno atual.
-  - `CriarMobs() : List<Mob>` — Instancia e retorna a horda de monstros com base no turno atual, aplicando a regra do Boss a cada 5 turnos e limite de até 5 inimigos.
-
----
 
 ## 🛠️ Tecnologias Utilizadas
 
