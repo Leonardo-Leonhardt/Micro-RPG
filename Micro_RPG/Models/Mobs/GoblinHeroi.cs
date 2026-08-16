@@ -2,6 +2,8 @@
 using System.Text;
 using Micro_RPG.Models.Mobs;
 
+namespace Micro_RPG.Models.Mobs;
+
 public class GoblinHeroi : Mob
 {
     public GoblinHeroi(int turnoAtual)

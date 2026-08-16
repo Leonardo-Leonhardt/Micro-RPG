@@ -2,6 +2,7 @@
 using System.Text;
 using Micro_RPG.Models.Mobs;
 
+namespace Micro_RPG.Models.Mobs;
 
 public class Esqueleto : Mob
 {
