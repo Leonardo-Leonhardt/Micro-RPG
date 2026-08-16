@@ -25,17 +25,10 @@ public class GerenciadorJogo
         return true;
     }
 
-    public void ExjecutarTurno()
+    public void ExecutarTurno()
     {
 
     }
-
-    private bool VerificarGamerOver()
-    {
-        return _Personagem.Vida <= 0;
-    }
-
-    public int Turno => _Turno;
 
     private List<Mob> CriarMobs()
     {
@@ -43,5 +36,12 @@ public class GerenciadorJogo
 
         return mobs;
     }
+
+    private bool VerificarGameOver()
+    {
+        return _Personagem.Vida <= 0;
+    }
+
+    public int Turno => _Turno;
 
 }
