@@ -2,6 +2,8 @@
 using System.Text;
 using Micro_RPG.Models;
 
+namespace Micro_RPG.Models.Mobs;
+
 public abstract class Mob : Entidade
 {
 

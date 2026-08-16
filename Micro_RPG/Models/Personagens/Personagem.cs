@@ -2,6 +2,8 @@
 using System.Text;
 using Micro_RPG.Models;
 
+namespace Micro_RPG.Models.Personagem;
+
 public abstract class Personagem : Entidade
 {
 

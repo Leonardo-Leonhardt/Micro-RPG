@@ -2,6 +2,8 @@
 using System.Text;
 using Micro_RPG.Models.Personagem;
 
+namespace Micro_RPG.Models.Personagem;
+
 public class Guerreiro : Personagem
 {
     public Guerreiro()
