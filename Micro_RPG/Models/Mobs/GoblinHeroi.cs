@@ -4,12 +4,14 @@ using Micro_RPG.Models.Mobs;
 
 public class GoblinHeroi : Mob
 {
-    public GoblinHeroi()
+    public GoblinHeroi(int turnoAtual)
+        : base(
+            nome: "Goblin Heroi",
+            vida: GeraVida(turnoAtual, vidaBase: 50, bonusVida: 10),
+            dano: GeraDano(turnoAtual, danoBase: 10, bonusDano: 5),
+            chanCritico: 0.15,
+            chanEvasao: 0.25)
     {
-        _vida = 50;
-        _dano = 10;
-        _chanCritico = 0.15;
-        _chanEvasao = 0.25;
     }
 
     protected override void AdicionarNome(StringBuilder sb)
