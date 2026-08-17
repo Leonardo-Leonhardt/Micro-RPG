@@ -46,14 +46,18 @@ public abstract class Personagem : Entidade
         return false;
     }
 
-    public void AumentarVidaMax(int upVida)
+    public bool AumentarVida(int upVida)
     {
         _vidaMax += upVida;
+
+        return true;
     }
 
-    public void AumentarDano(int upDano)
+    public bool AumentarDano(int upDano)
     {
         _dano += upDano;
+
+        return true;
     }
 
     protected override void AdicionarMaxHp(StringBuilder sb)

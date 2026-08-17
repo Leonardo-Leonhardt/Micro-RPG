@@ -30,25 +30,30 @@ public class GerenciadorJogo
 
     }
 
-    private void FinalizarTurno()
+    private int FinalizarTurno(string escolha)
     {
         int up = 2;
         int valor = Random.Shared.NextDouble()
 
-
-
-
-       _ = valor switch
+       int pontosGalhos = valor switch
        {
-           < 0.05 => // almenta vida ou dano  _Personagem.AumentarVidaMax(up + 1)
-           < 0.0001=> //_Personagem.AumentarVidaMax(up + 2)
-           _ => //_Personagem.AumentarVidaMax(up)
+           < 0.05 => up + 1,
+           < 0.0001 => up + 2,
+           _ => up
        };
 
+        escolha = escolha.ToLower();
 
+        if (escolha == "vida")
+        {
+            _Personagem.AumentarVida(pontosGalhos);
+        }
+        else if (escolha == "dano")
+        {
+            _Personagem.AumentarDano(pontosGalhos);
+        }
 
-
-
+        return up;
 
     }
 
