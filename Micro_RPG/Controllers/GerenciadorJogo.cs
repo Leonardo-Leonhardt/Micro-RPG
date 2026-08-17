@@ -5,6 +5,7 @@ using Micro_RPG.Models.Mobs;
 using Micro_RPG.Models.Factory;
 using Micro_RPG.Models.Personagens;
 
+
 namespace Micro_RPG.Controllers;
 
 public class GerenciadorJogo
@@ -12,6 +13,7 @@ public class GerenciadorJogo
     private Personagem _Personagem;
     private List<Mob> _HordaInimigo;
     private int _Turno;
+    private int quantidadeMobs = 1;
 
     public GerenciadorJogo(string tipoPersonagem)
     {
@@ -33,14 +35,14 @@ public class GerenciadorJogo
     private int FinalizarTurno(string escolha)
     {
         int up = 2;
-        int valor = Random.Shared.NextDouble()
+        double valor = Random.Shared.NextDouble();
 
-       int pontosGalhos = valor switch
-       {
-           < 0.05 => up + 1,
-           < 0.0001 => up + 2,
-           _ => up
-       };
+        int pontosGalhos = valor switch
+        {
+            < 0.0001 => up + 2,
+            < 0.05 => up + 1,
+            _ => up
+        };
 
         escolha = escolha.ToLower();
 
@@ -57,18 +59,27 @@ public class GerenciadorJogo
 
     }
 
-    private bool Aumenta()
-    {
-
-
-
-    }
-
     private List<Mob> CriarMobs()
     {
         List<Mob> mobs = new List<Mob>();
 
-        return mobs;
+        if (_Turno % 5 == 0)
+        {
+            mobs.Add(MobFactory.CriarMob("Boss", _Turno));
+
+            return mobs;
+        }
+        else
+        {
+            for (int i = 0; i < quantidadeMobs; i++)
+            {
+                mobs.Add(MobFactory.CriarMob("Inimigo", _Turno));
+            }
+
+
+
+            return mobs;
+        }
     }
 
     private bool VerificarGameOver()

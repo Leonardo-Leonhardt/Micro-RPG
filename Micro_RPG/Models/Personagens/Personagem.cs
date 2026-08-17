@@ -6,7 +6,6 @@ namespace Micro_RPG.Models.Personagens;
 
 public abstract class Personagem : Entidade
 {
-
     protected int _vidaMax;
     protected double _recuperaVida;
     protected double _CuraMilagrosa = 0.0001;

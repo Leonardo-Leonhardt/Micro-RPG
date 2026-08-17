@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Text;
-using Micro_RPG.Models.Mobs;
 
 namespace Micro_RPG.Models.Mobs;
 
 public class Goblin : Mob
 {
-
     public Goblin(int turnoAtual)
         : base(
             nome: "Goblin",
@@ -15,10 +13,5 @@ public class Goblin : Mob
             chanCritico: 0.10,
             chanEvasao: 0.20)
     {
-    }
-
-    protected override void AdicionarNome(StringBuilder sb)
-    {
-        sb.AppendLine($"Enemy: {_nome}");
     }
 }

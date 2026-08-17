@@ -6,7 +6,6 @@ namespace Micro_RPG.Models.Mobs;
 
 public abstract class Mob : Entidade
 {
-
     protected Mob(string nome, int vida, int dano, double chanCritico, double chanEvasao)
         : base(
             nome,
@@ -41,5 +40,10 @@ public abstract class Mob : Entidade
         int bonusCiclo = ciclo > 0 ? (ciclo / bonusDano) : 0;
 
         return danoBase + bonusCiclo;
+    }
+
+    protected override void AdicionarNome(StringBuilder sb)
+    {
+        sb.AppendLine($"Enemy: {_nome}");
     }
 }
