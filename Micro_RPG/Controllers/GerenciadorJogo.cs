@@ -30,6 +30,35 @@ public class GerenciadorJogo
 
     }
 
+    private void FinalizarTurno()
+    {
+        int up = 2;
+        int valor = Random.Shared.NextDouble()
+
+
+
+
+       _ = valor switch
+       {
+           < 0.05 => // almenta vida ou dano  _Personagem.AumentarVidaMax(up + 1)
+           < 0.0001=> //_Personagem.AumentarVidaMax(up + 2)
+           _ => //_Personagem.AumentarVidaMax(up)
+       };
+
+
+
+
+
+
+    }
+
+    private bool Aumenta()
+    {
+
+
+
+    }
+
     private List<Mob> CriarMobs()
     {
         List<Mob> mobs = new List<Mob>();
@@ -40,6 +69,11 @@ public class GerenciadorJogo
     private bool VerificarGameOver()
     {
         return _Personagem.Vida <= 0;
+    }
+
+    private bool RecuperarVida()
+    {
+        return _Personagem.RecuperarVida();
     }
 
     public int Turno => _Turno;
