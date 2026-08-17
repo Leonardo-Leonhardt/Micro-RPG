@@ -61,7 +61,7 @@ O Guerreiro é a classe inicial jogável que herda de `Personagem`:
 
 ## 📐 Estrutura de Classes (UML)
 
-![Diagrama de Classes V1](docs/diagramas/diagrama-classes-v1.svg)
+![Diagrama de Classes V1](docs/diagramas/diagrama-classes-v1.png)
 
 ### `Entidade` (Classe Abstrata Base)
 Classe fundamental que centraliza os atributos e regras de combate compartilhados por todas as criaturas do jogo.

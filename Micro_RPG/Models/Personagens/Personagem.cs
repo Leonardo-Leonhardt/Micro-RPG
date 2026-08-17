@@ -9,6 +9,7 @@ public abstract class Personagem : Entidade
 
     protected int _vidaMax;
     protected double _recuperaVida;
+    protected double _CuraMilagrosa = 0.0001;
 
     protected Personagem(string nome, int vida, int dano, double chanCritico, double chanEvasao, double recuperaVida)
         : base(
@@ -20,6 +21,29 @@ public abstract class Personagem : Entidade
     {
         _vidaMax = vida;
         _recuperaVida = recuperaVida;
+    }  
+
+    public bool RecuperarVida()
+    {
+        if (_vida < _vidaMax)
+        {
+            int cura;
+
+            if (Random.Shared.NextDouble() < _CuraMilagrosa)
+            {
+                cura = _vidaMax;
+            }
+            else
+            {
+                cura = (int)(_vidaMax * _recuperaVida);
+            }
+
+            cura = Math.Max(1, cura);
+            _vida = Math.Min(_vidaMax, _vida + cura);
+            return true;
+        }
+
+        return false;
     }
 
     public void AumentarVidaMax(int upVida)
@@ -27,31 +51,9 @@ public abstract class Personagem : Entidade
         _vidaMax += upVida;
     }
 
-    public void RecuparaVida()
-    {
-        if(_vida < _vidaMax)
-        {
-            int cura = (int)(_vidaMax * _recuperaVida);
-
-            cura = Math.Max(1, cura);
-
-            _vida = Math.Min(_vidaMax, _vida + cura);
-        }
-    }
-
     public void AumentarDano(int upDano)
     {
         _dano += upDano;
-    }
-
-    public void AumentarVida()
-    {
-        _vida += (int)(_vidaMax * _recuperaVida);
-
-        if (_vida > _vidaMax)
-        {
-            _vida = _vidaMax;
-        }
     }
 
     protected override void AdicionarMaxHp(StringBuilder sb)
@@ -62,7 +64,6 @@ public abstract class Personagem : Entidade
     protected override void AdicionarNome(StringBuilder sb)
     {
         sb.AppendLine($"Class: {_nome}");
-    }   
+    }
 }
 
-    
