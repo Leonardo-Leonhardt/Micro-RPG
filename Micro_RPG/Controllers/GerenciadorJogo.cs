@@ -27,7 +27,7 @@ public class GerenciadorJogo
         _turno = 0;
     }
 
-    public bool ExecutarTurno()
+    public bool IniciarJogo()
     {
         CriarMobs();
 
@@ -87,7 +87,7 @@ public class GerenciadorJogo
         {
             for (int i = 0; i < _quantidadeMobs; i++)
             {
-                mobs.Add(MobFactory.CriarMob(Random.Shared.Next(0, _nomeMobs.Length), _turno));
+                mobs.Add(MobFactory.CriarMob(_nomeMobs[Random.Shared.Next(0, _nomeMobs.Length)], _turno));
             }
 
             return -1;
