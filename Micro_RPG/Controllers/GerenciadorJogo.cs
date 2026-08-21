@@ -29,19 +29,16 @@ public class GerenciadorJogo
 
     public bool IniciarJogo()
     {
-        CriarMobs();
-
-
 
         return true;
     }
 
     /// <summary>
-    /// Finaliza o turno e aplica os efeitos das ações do personagem.
+    /// Escolhe o bônus para o personagem com base na escolha.
     /// </summary>
-    /// <param name="escolha">A escolha do personagem para o turno.</param>
+    /// <param name="escolha">A escolha do personagem.</param>
     /// <returns>O número de pontos de galhos obtidos.</returns>
-    private int FinalizarTurno(string escolha)
+    private int EscolherBonus(string escolha)
     {
         int up = 2;
         double valor = Random.Shared.NextDouble();
@@ -74,11 +71,9 @@ public class GerenciadorJogo
     /// <returns>0 se um boss foi criado, -1 caso contrário.</returns>
     private int CriarMobs()
     {
-        List<Mob> mobs = new List<Mob>();
-
         if (_turno % 5 == 0)
         {
-            mobs.Add(MobFactory.CriarMob("Boss", _turno));
+            _hordaInimigo.Add(MobFactory.CriarMob("Boss", _turno));
             _quantidadeMobs++;
 
             return 0;
@@ -87,7 +82,7 @@ public class GerenciadorJogo
         {
             for (int i = 0; i < _quantidadeMobs; i++)
             {
-                mobs.Add(MobFactory.CriarMob(_nomeMobs[Random.Shared.Next(0, _nomeMobs.Length)], _turno));
+                _hordaInimigo.Add(MobFactory.CriarMob(_nomeMobs[Random.Shared.Next(0, _nomeMobs.Length)], _turno));
             }
 
             return -1;
@@ -104,12 +99,32 @@ public class GerenciadorJogo
     }
 
     /// <summary>
+    /// Verifica se o jogador venceu.
+    /// </summary>
+    /// <returns>true se o jogador venceu, false caso contrário.</returns>
+    private bool VerificarVitoria()
+    {
+        return _hordaInimigo.Count == 0;
+    }
+
+    /// <summary>
     /// Tenta recuperar vida do personagem.
     /// </summary>
     /// <returns>true se a vida foi recuperada, false caso contrário.</returns>
     private bool RecuperarVida()
     {
         return _personagem.RecuperarVida();
+    }
+
+
+    private int AtacarMob()
+    {
+        return 0;
+    }
+
+    private int AtacarPersonagem()
+    {
+        return 0;
     }
 
     /// <summary>
