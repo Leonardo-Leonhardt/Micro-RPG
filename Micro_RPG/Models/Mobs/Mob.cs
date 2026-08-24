@@ -44,6 +44,6 @@ public abstract class Mob : Entidade
 
     protected override void AdicionarNome(StringBuilder sb)
     {
-        sb.AppendLine($"Enemy: {_nome}");
+        sb.AppendLine($"Enemy: {Nome}");
     }
 }
