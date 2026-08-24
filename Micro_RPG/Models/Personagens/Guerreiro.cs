@@ -6,6 +6,9 @@ namespace Micro_RPG.Models.Personagens;
 
 public class Guerreiro : Personagem
 {
+    /// <summary>
+    /// Inicializa uma nova instância do Guerreiro.
+    /// </summary>
     public Guerreiro()
         : base(
             nome: "Gerreiro",
@@ -17,6 +20,10 @@ public class Guerreiro : Personagem
     {
     }
 
+    /// <summary>
+    /// Faz o guerreiro atacar.
+    /// </summary>
+    /// <returns>O dano causado pelo ataque.</returns>
     public override int Atacar()
     {
         int danoMinimo = Math.Max(1, _dano - 3);

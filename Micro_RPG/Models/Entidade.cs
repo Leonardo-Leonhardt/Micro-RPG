@@ -11,6 +11,14 @@ public abstract class Entidade
     protected double _chanCritico;
     protected double _chanEvasao;
 
+    /// <summary>
+    /// Inicializa uma nova instância do Entidade.
+    /// </summary>
+    /// <param name="nome">O nome da entidade.</param>
+    /// <param name="vida">A vida da entidade.</param>
+    /// <param name="dano">O dano da entidade.</param>
+    /// <param name="chanCritico">A chance de acerto crítico da entidade.</param>
+    /// <param name="chanEvasao">A chance de evasão da entidade.</param>
     protected Entidade(string nome, int vida, int dano, double chanCritico, double chanEvasao)
     {
         _nome = nome;
@@ -104,6 +112,10 @@ public abstract class Entidade
     /// <param name="sb">O StringBuilder ao qual adicionar o nome.</param>
     protected virtual void AdicionarNome(StringBuilder sb) { }
 
+    /// <summary>
+    /// Retorna uma representação string da entidade.
+    /// </summary>
+    /// <returns>A representação string da entidade.</returns>
     public override string ToString()
     {
         StringBuilder sb = new StringBuilder();

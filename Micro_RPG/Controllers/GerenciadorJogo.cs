@@ -99,15 +99,6 @@ public class GerenciadorJogo
     }
 
     /// <summary>
-    /// Verifica se o jogador venceu.
-    /// </summary>
-    /// <returns>true se o jogador venceu, false caso contrário.</returns>
-    private bool VerificarVitoria()
-    {
-        return _hordaInimigo.Count == 0;
-    }
-
-    /// <summary>
     /// Tenta recuperar vida do personagem.
     /// </summary>
     /// <returns>Uma tupla com o resultado da recuperação de vida.</returns>
@@ -175,4 +166,10 @@ public class GerenciadorJogo
     /// Retorna o Turno atual do jogo.
     /// </summary>
     public int Turno => _turno;
+
+    /// <summary>
+    /// Verifica se o turno foi concluído.
+    /// </summary>
+    /// <returns>true se o turno foi concluído, false caso contrário.</returns>
+    private bool TurnoConcluido() => _hordaInimigo.Count == 0;
 }
