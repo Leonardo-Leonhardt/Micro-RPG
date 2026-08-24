@@ -5,6 +5,10 @@ namespace Micro_RPG.Models.Mobs;
 
 public class Esqueleto : Mob
 {
+    /// <summary>
+    /// Inicializa uma nova instância do Esqueleto.
+    /// </summary>
+    /// <param name="turnoAtual">O turno atual.</param>
     public Esqueleto(int turnoAtual) 
         : base(
             nome: "Esqueleto",

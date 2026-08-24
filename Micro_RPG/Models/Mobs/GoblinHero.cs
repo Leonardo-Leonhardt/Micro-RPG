@@ -5,6 +5,10 @@ namespace Micro_RPG.Models.Mobs;
 
 public class GoblinHero : Mob
 {
+    /// <summary>
+    /// Inicializa uma nova instância do GoblinHero.
+    /// </summary>
+    /// <param name="turnoAtual">O turno atual.</param>
     public GoblinHero(int turnoAtual)
         : base(
             nome: "Goblin Hero",
