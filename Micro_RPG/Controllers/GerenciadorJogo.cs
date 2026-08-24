@@ -26,18 +26,12 @@ public class GerenciadorJogo
         _turno = 0;
     }
 
-    public bool IniciarJogo()
-    {
-
-        return true;
-    }
-
     /// <summary>
     /// Escolhe o bônus para o personagem com base na escolha.
     /// </summary>
     /// <param name="escolha">A escolha do personagem.</param>
     /// <returns>O número de pontos de ganhos obtidos.</returns>
-    private int EscolherBonus(string escolha)
+    public int EscolherBonus(string escolha)
     {
         int up = 2;
         double valor = Random.Shared.NextDouble();
@@ -68,7 +62,7 @@ public class GerenciadorJogo
     /// Cria os inimigos para o turno.
     /// </summary>
     /// <returns>0 se um boss foi criado, -1 caso contrário.</returns>
-    private int CriarMobs()
+    public int CriarMobs()
     {
         _turno++;
 
@@ -93,7 +87,7 @@ public class GerenciadorJogo
     /// Verifica se o jogo terminou.
     /// </summary>
     /// <returns>true se o jogo terminou, false caso contrário.</returns>
-    private bool VerificarGameOver()
+    public bool VerificarGameOver()
     {
         return _personagem.Vida <= 0;
     }
@@ -111,7 +105,7 @@ public class GerenciadorJogo
     /// Ataca um inimigo e retorna se o ataque acertou e o dano causado.
     /// </summary>
     /// <returns>Uma tupla com o resultado do ataque.</returns>
-    private (bool Acertou, int Dano) AtacarMob()
+    public (bool Acertou, int Dano) AtacarMob()
     {
         return Atacar(_personagem);
     }
@@ -120,7 +114,7 @@ public class GerenciadorJogo
     /// Ataca o personagem e retorna se o ataque acertou e o dano causado.
     /// </summary>
     /// <returns>Uma tupla com o resultado do ataque.</returns>
-    private (bool Acertou, int Dano) AtacarPersonagem()
+    public (bool Acertou, int Dano) AtacarPersonagem()
     {
         return Atacar(_hordaInimigo[0]);
     }
@@ -138,6 +132,8 @@ public class GerenciadorJogo
         if (entidade is Personagem)
         {
             recebeuDano = _hordaInimigo[0].ReceberDano(dano);
+
+
         }
         else if (entidade is Mob)
         {
@@ -151,15 +147,18 @@ public class GerenciadorJogo
     /// Remove um mob derrotado da horda.
     /// </summary>
     /// <returns>true se um mob foi removido, false caso contrário.</returns>
-    private bool RemoverMobDerrotado()
+    public Mob? RemoverMobDerrotado()
     {
         if (_hordaInimigo.Count > 0 && _hordaInimigo[0].Vida <= 0)
         {
+            Mob mobEliminado = _hordaInimigo[0];
+
             _hordaInimigo.RemoveAt(0);
-            return true;
+
+            return mobEliminado;
         }
 
-        return false;
+        return null;
     }
 
     /// <summary>
@@ -168,8 +167,16 @@ public class GerenciadorJogo
     public int Turno => _turno;
 
     /// <summary>
-    /// Verifica se o turno foi concluído.
+    /// Verifica se o turno foi concluído, ou seja, se todos os inimigos foram derrotados. Se a horda de inimigos estiver vazia, o personagem tenta recuperar vida.
     /// </summary>
     /// <returns>true se o turno foi concluído, false caso contrário.</returns>
-    private bool TurnoConcluido() => _hordaInimigo.Count == 0;
+    public bool TurnoConcluido()
+    {
+        if(_hordaInimigo.Count == 0)
+        {
+            RecuperarVida();
+        }
+
+        return _hordaInimigo.Count == 0;
+    }
 }
