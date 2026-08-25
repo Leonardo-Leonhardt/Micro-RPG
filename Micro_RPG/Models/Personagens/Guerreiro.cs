@@ -9,15 +9,16 @@ public class Guerreiro : Personagem
     /// <summary>
     /// Inicializa uma nova instância do Guerreiro.
     /// </summary>
-    public Guerreiro()
+    public Guerreiro(string nome)
         : base(
-            nome: "Gerreiro",
+            nome: nome,
             vida: 40,
             dano: 5,
             chanCritico: 0.10,
             chanEvasao: 0.05,
             recuperaVida: 0.50)
     {
+        _Class = "Guerreiro";
     }
 
     /// <summary>

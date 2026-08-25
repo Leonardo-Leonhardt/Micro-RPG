@@ -19,11 +19,11 @@ public class GerenciadorJogo
     /// Inicializa uma nova instância do GerenciadorJogo com o tipo de personagem especificado.
     /// </summary>
     /// <param name="tipoPersonagem">O tipo de personagem a ser criado.</param>
-    public GerenciadorJogo(string tipoPersonagem)
+    public GerenciadorJogo(string tipoPersonagem, string nomePersonagem)
     {
-        _personagem = PersonagemFactory.CriarPersonagem(tipoPersonagem);
+        _personagem = PersonagemFactory.CriarPersonagem(tipoPersonagem, nomePersonagem);
         _hordaInimigo = new List<Mob>();
-        _turno = 0;
+        _turno = 25;
     }
 
     /// <summary>
@@ -59,12 +59,12 @@ public class GerenciadorJogo
     }
 
     /// <summary>
-    /// Cria os inimigos para o turno.
+    /// Cria mobs para o turno atual. A cada 5 turnos, um "Goblin Hero" é criado. Nos outros turnos, uma quantidade de mobs é criada com base no número do turno.
     /// </summary>
-    /// <returns>0 se um boss foi criado, -1 caso contrário.</returns>
+    /// <returns>A quantidade de mobs criados.</returns>
     public int CriarMobs()
     {
-        _turno++;
+        ++_turno;
 
         if (_turno % 5 == 0)
         {
@@ -80,7 +80,7 @@ public class GerenciadorJogo
             _hordaInimigo.Add(MobFactory.CriarMob(_nomeMobs[Random.Shared.Next(0, _nomeMobs.Length)], _turno));
         }
 
-        return -1;
+        return quantidadeMobs;
     }
 
     /// <summary>
@@ -162,11 +162,6 @@ public class GerenciadorJogo
     }
 
     /// <summary>
-    /// Retorna o Turno atual do jogo.
-    /// </summary>
-    public int Turno => _turno;
-
-    /// <summary>
     /// Verifica se o turno foi concluído, ou seja, se todos os inimigos foram derrotados. Se a horda de inimigos estiver vazia, o personagem tenta recuperar vida.
     /// </summary>
     /// <returns>true se o turno foi concluído, false caso contrário.</returns>
@@ -179,4 +174,24 @@ public class GerenciadorJogo
 
         return _hordaInimigo.Count == 0;
     }
+
+    /// <summary>
+    /// Retorna o Turno atual do jogo.
+    /// </summary>
+    public int Turno => _turno;
+
+    /// <summary>
+    /// Retorna o nome do personagem criado.
+    /// </summary>
+    public string NomePersonagem => _personagem.Nome;
+
+    /// <summary>
+    /// Retorna o personagem criado.
+    /// </summary>
+    public Personagem Personagem => _personagem;
+
+    /// <summary>
+    /// Retorna a lista de mobs inimigos da horda.
+    /// </summary>
+    public List<Mob> HordaInimigo => _hordaInimigo;
 }
