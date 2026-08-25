@@ -103,7 +103,7 @@ public abstract class Entidade
     /// <summary>
     /// Adiciona informações adicionais sobre a entidade ao StringBuilder. Este método pode ser sobrescrito em classes derivadas para incluir informações específicas.
     /// </summary>
-    /// /// <param name="sb">O StringBuilder ao qual adicionar o nome.</param>
+    /// <param name="sb">O StringBuilder ao qual adicionar o nome.</param>
     protected virtual void AdicionarMaxHp(StringBuilder sb) { }
 
     /// <summary>
@@ -113,6 +113,12 @@ public abstract class Entidade
     protected virtual void AdicionarNome(StringBuilder sb) { }
 
     /// <summary>
+    /// Adiciona informações sobre a classe da entidade ao StringBuilder. Este método pode ser sobrescrito em classes derivadas para incluir informações específicas.
+    /// </summary>
+    /// <param name="sb">O StringBuilder ao qual adicionar as informações.</param>
+    protected virtual void AdicionarClass(StringBuilder sb) { }
+
+    /// <summary>
     /// Retorna uma representação string da entidade.
     /// </summary>
     /// <returns>A representação string da entidade.</returns>
@@ -120,6 +126,7 @@ public abstract class Entidade
     {
         StringBuilder sb = new StringBuilder();
         AdicionarNome(sb);
+        AdicionarClass(sb);
         sb.AppendLine($"HP: {_vida}");
         AdicionarMaxHp(sb);
         sb.AppendLine($"Attack: {_dano}");

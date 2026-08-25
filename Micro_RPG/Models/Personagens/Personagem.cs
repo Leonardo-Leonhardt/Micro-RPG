@@ -6,6 +6,7 @@ namespace Micro_RPG.Models.Personagens;
 
 public abstract class Personagem : Entidade
 {
+    protected string _Class;
     protected int _vidaMax;
     protected double _recuperaVida;
     protected double _CuraMilagrosa = 0.0001;
@@ -88,7 +89,7 @@ public abstract class Personagem : Entidade
     /// <param name="sb">O StringBuilder ao qual adicionar as informações.</param>
     protected override void AdicionarMaxHp(StringBuilder sb)
     {
-        sb.AppendLine($"Max HP: {_vidaMax}");
+       sb.AppendLine($"Max HP: {_vidaMax}");
     }
 
     /// <summary>
@@ -97,6 +98,15 @@ public abstract class Personagem : Entidade
     /// <param name="sb">O StringBuilder ao qual adicionar as informações.</param>
     protected override void AdicionarNome(StringBuilder sb)
     {
-        sb.AppendLine($"Class: {Nome}");
+        sb.AppendLine($"Nome: {Nome}");
+    }
+
+    /// <summary>
+    /// Adiciona informações sobre a classe do personagem ao StringBuilder.
+    /// </summary>
+    /// <param name="sb">O StringBuilder ao qual adicionar as informações.</param>
+    protected override void AdicionarClass(StringBuilder sb)
+    {
+        sb.AppendLine($"Class: {_Class}");
     }
 }
