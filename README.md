@@ -221,6 +221,7 @@ Micro-RPG/
 - [ ] Integrar o loop de jogo (`Menu`, `CriarPersonagem`, combate) por completo ao `Main`
 - [ ] Adicionar novas classes jogáveis além do Guerreiro
 - [ ] Adicionar testes automatizados para as regras de combate e escalonamento
+- [ ] Adicionar Drop Duplo: O jogador recebe ambos os aprimoramentos (+HP Máximo E +Dano) no mesmo turno.
 - [ ] Atualizar o diagrama de classes com as factories
 
 ---
