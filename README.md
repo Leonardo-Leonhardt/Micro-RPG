@@ -6,7 +6,7 @@ Um jogo de combate por turnos desenvolvido em **C#** via Console App, focado em 
 
 ## 🚧 Status do Projeto
 
-Em desenvolvimento ativo. As classes de domínio (personagem, mobs, factories e o `GerenciadorJogo`) já implementam toda a lógica de combate, evolução e escalonamento de inimigos. O loop de jogo via menu (`Menu()`, `CriarPersonagem()`) está implementado em `Program.cs`, mas ainda em processo de integração completa ao `Main`.
+Em desenvolvimento ativo. As classes de domínio (personagem, mobs, factories e o `GerenciadorJogo`) já implementam toda a lógica de combate, evolução e escalonamento de inimigos. O `Main` já executa um ciclo real de combate (ataques trocados, verificação de crítico, checagem de game over e avanço de turno), mas ainda como um cenário fixo de teste — o menu completo (`Menu()`, `CriarPersonagem()`) ainda não está integrado a esse fluxo.
 
 ---
 
@@ -21,7 +21,7 @@ O objetivo do jogador é sobreviver ao maior número de turnos possível. O jogo
 O Guerreiro é a classe inicial jogável que herda de `Personagem`:
 
 - **Vida Máxima Inicial:** 40 HP.
-- **Dano Base:** 5 (calcula um valor dinâmico entre `max(1, Dano - 3)` e `Dano` a cada ataque).
+- **Dano Base:** 7 (calcula um valor dinâmico entre `max(1, Dano - 3)` e `Dano` a cada ataque).
 - **Recuperação Base:** Restaura 50% da vida máxima quando todos os inimigos do turno são derrotados.
 - **Atributos Especiais:**
   - **Chance de Crítico (`_chanCritico`):** 10% de chance de dobrar o dano final desferido.
@@ -72,7 +72,7 @@ Classe fundamental que centraliza os atributos e regras de combate compartilhado
   - `_chanCritico : double`
   - `_chanEvasao : double`
 - **Métodos:**
-  - `Atacar() : int` — Calcula o dano base e dobra o valor caso o golpe seja crítico.
+  - `Atacar() : (int dano, bool critico)` — Calcula o dano base, indicando também se o golpe foi crítico (e, nesse caso, dobrando o valor).
   - `ReceberDano(dano : int) : bool` — Processa o dano recebido após testar a evasão (retorna `true` se foi atingido ou `false` se desviou).
   - `Vida : int` / `Nome : string` — Propriedades somente leitura expondo o estado da entidade.
   - `ToString() : string` — Retorna os dados formatados da entidade via `StringBuilder`, delegando trechos específicos para os métodos virtuais `AdicionarNome`, `AdicionarClass` e `AdicionarMaxHp`.
@@ -94,9 +94,9 @@ Especialização de `Entidade` voltada exclusivamente para o jogador, contendo m
   - `AumentarDano(upDano : int) : bool` — Incrementa o dano base do personagem.
 
 #### `Guerreiro : Personagem` (Classe Filha)
-- **Construtor:** `Guerreiro(nome : string)` — Inicializa os atributos base (40 HP, 5 Dano, 10% Crítico, 5% Evasão e 50% de Recuperação).
+- **Construtor:** `Guerreiro(nome : string)` — Inicializa os atributos base (40 HP, 7 Dano, 10% Crítico, 5% Evasão e 50% de Recuperação).
 - **Métodos:**
-  - `Atacar() : int` — Sobrescreve o método sorteando um valor entre `max(1, _dano - 3)` e `_dano` antes de aplicar o crítico.
+  - `Atacar() : (int dano, bool critico)` — Sobrescreve o método sorteando um valor entre `max(1, _dano - 3)` e `_dano`, dobrando o valor e sinalizando `critico = true` quando o golpe crítico ocorre.
 
 ---
 
@@ -141,9 +141,9 @@ Responsável por gerenciar o ciclo de vida do jogo, agregação das entidades e 
 - **Métodos:**
   - `EscolherBonus(escolha : string) : int` — Aplica o bônus de evolução (vida ou dano) escolhido pelo jogador e retorna os pontos ganhos.
   - `CriarMobs() : int` — Avança o turno e instancia os inimigos correspondentes (horda comum ou o Goblin Hero nos turnos de chefe), retornando a quantidade de mobs comuns criados.
-  - `AtacarMob() : (bool Acertou, int Dano)` — Executa o ataque do jogador contra o primeiro mob da horda.
-  - `AtacarPersonagem() : (bool Acertou, int Dano)` — Executa o ataque do primeiro mob da horda contra o jogador.
-  - `RemoverMobDerrotado() : Mob?` — Remove e retorna o mob no topo da horda caso sua vida tenha chegado a zero.
+  - `AtacarMob() : (bool Acertou, int Dano, bool Critico)` — Executa o ataque do jogador contra o primeiro mob da horda.
+  - `AtacarPersonagem() : (bool Acertou, int Dano, bool Critico)` — Executa o ataque do primeiro mob da horda contra o jogador.
+  - `TurnoCompleto() : bool` — Verifica se o mob no topo da horda foi derrotado e, em caso positivo, o remove da lista, retornando `true`.
   - `TurnoConcluido() : bool` — Verifica se a horda foi totalmente derrotada e, em caso positivo, aciona a recuperação de vida do jogador.
   - `VerificarGameOver() : bool` — Retorna `true` caso o HP do jogador seja `≤ 0`.
   - `Turno`, `NomePersonagem`, `Personagem`, `HordaInimigo` — Propriedades de leitura para o estado atual da partida.
@@ -218,10 +218,12 @@ Micro-RPG/
 
 ## 🗺️ Roadmap
 
-- [ ] Integrar o loop de jogo (`Menu`, `CriarPersonagem`, combate) por completo ao `Main`
+- [x] Corrigir o valor inicial do contador de turnos (`_turno` começava em 25 por engano; agora começa em 0)
+- [x] Fazer `Atacar()` informar se o golpe foi crítico, para uso na exibição do combate
+- [ ] Integrar o menu (`Menu`, `CriarPersonagem`) ao ciclo de combate já funcional no `Main`
 - [ ] Adicionar novas classes jogáveis além do Guerreiro
 - [ ] Adicionar testes automatizados para as regras de combate e escalonamento
-- [ ] Adicionar Drop Duplo: O jogador recebe ambos os aprimoramentos (+HP Máximo E +Dano) no mesmo turno.
+- [ ] Adicionar Drop Duplo: o jogador recebe ambos os aprimoramentos (+HP Máximo E +Dano) ao derrotar o Goblin Hero
 - [ ] Atualizar o diagrama de classes com as factories
 
 ---
