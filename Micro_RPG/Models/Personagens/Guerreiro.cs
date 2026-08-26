@@ -13,7 +13,7 @@ public class Guerreiro : Personagem
         : base(
             nome: nome,
             vida: 40,
-            dano: 5,
+            dano: 7,
             chanCritico: 0.10,
             chanEvasao: 0.05,
             recuperaVida: 0.50)
@@ -25,7 +25,7 @@ public class Guerreiro : Personagem
     /// Faz o guerreiro atacar.
     /// </summary>
     /// <returns>O dano causado pelo ataque.</returns>
-    public override int Atacar()
+    public override (int dano, bool critico) Atacar()
     {
         int danoMinimo = Math.Max(1, _dano - 3);
         int danoMaximo = _dano + 1;
@@ -33,9 +33,9 @@ public class Guerreiro : Personagem
 
         if (Critico())
         {
-            return (danoDoTurno + danoDoTurno);
+            return ((danoDoTurno + danoDoTurno), true);
         }
 
-        return danoDoTurno;
+        return (danoDoTurno, false);
     }
 }

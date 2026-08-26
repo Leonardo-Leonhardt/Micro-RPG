@@ -16,10 +16,22 @@ namespace Micro_RPG
         static void Main(string[] args)
         {
             jogo = new GerenciadorJogo("Guerreiro", "Herói");
+            jogo.CriarMobs();
+            //CriarPersonagem();
 
-            CriarInimigo();
+            for (int i = 0; i < 3; i++)
+            {
+                AtacarInimigo();
+                AtacarPersonagem();
+            }
 
-            Console.WriteLine(jogo.Personagem.ToString());
+            Console.WriteLine(jogo.VerificarGameOver() == true ? "\nO jogo acabou!" : "\nO jogo continua...");
+
+            AvancarTurno();
+
+            
+
+            Console.WriteLine($"\nPersonagem: {jogo.Personagem.ToString()}");
             Console.WriteLine("Inimigos na horda:");
             foreach (var mob in jogo.HordaInimigo)
             {
@@ -34,10 +46,7 @@ namespace Micro_RPG
         /// </summary>
         static void Menu()
         {
-            Console.Clear();
-            Console.WriteLine("=========================================");
-            Console.WriteLine("⚔️  BEM-VINDO AO MINI RPG DE TERMINAL  ⚔️");
-            Console.WriteLine("=========================================");
+            ShowCabecalho("BEM-VINDO AO MINI RPG DE TERMINAL");
 
             int opcao = 0;
 
@@ -86,7 +95,7 @@ namespace Micro_RPG
             foreach (char c in texto)
             {
                 Console.Write(c);
-                int tempoEspera = (c == '.' || c == '!') ? 600 : 100;
+                int tempoEspera = (c == '.' || c == '!') ? 60 : 10;
                 Thread.Sleep(tempoEspera);
             }
         }
@@ -165,7 +174,7 @@ namespace Micro_RPG
                 }
 
                 ShowLoading("Opção inválida!!!", true);
-                ShowLoading("Tente novamente...", false);
+                ShowLoading("\nTente novamente...", false);
             }
         }
         #endregion
@@ -187,7 +196,7 @@ namespace Micro_RPG
 
             if (quantidadeDeMobs > 0)
             {
-                ShowLoading("Quantidade de inimigos gerados: " + quantidadeDeMobs, true);
+                ShowLoading($"Quantidade de inimigos gerados: {quantidadeDeMobs}!!!", true);
             }
             else
             {
@@ -196,8 +205,35 @@ namespace Micro_RPG
         }
         #endregion
 
+        #region Ataques
+        static void AtacarInimigo()
+        {
+            var (acertou, dano, critico) = jogo.AtacarMob();
 
 
+            ShowLoading(critico == true ? $"Ataque crítico! \nVocê acertou o inimigo e causou {dano} de dano!" : acertou ? $"\nVocê acertou o inimigo e causou {dano} de dano!" : "Você errou o ataque!");
+        }
+
+        static void AtacarPersonagem()
+        {
+            var (acertou, dano, critico) = jogo.AtacarPersonagem();
+
+            ShowLoading(critico == true ? $"Ataque crítico! \nO {jogo.HordaInimigo[0].Nome} acertou você e causou {dano} de dano!" : acertou ? $"\nO {jogo.HordaInimigo[0].Nome} acertou você e causou {dano} de dano!" : "O inimigo errou o ataque!");
+        }
+        #endregion
+
+        static void AvancarTurno()
+        {
+            if(jogo.TurnoCompleto() == true)
+            {
+                ShowLoading("Turno concluído! Avançando para o próximo turno...");
+
+            }
+            else
+            {
+                ShowLoading("Ainda há inimigos vivos! Não é possível avançar para o próximo turno.");
+            }
+        }
 
     }
 }

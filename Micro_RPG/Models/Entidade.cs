@@ -32,14 +32,14 @@ public abstract class Entidade
     /// Faz a entidade atacar.
     /// </summary>
     /// <returns>O dano causado pelo ataque.</returns>
-    public virtual int Atacar()
+    public virtual (int dano, bool critico) Atacar()
     {
         if (Critico())
         {
-            return (_dano + _dano);
+            return (_dano + _dano, true);
         }
 
-        return _dano;
+        return (_dano, false);
     }
 
     /// <summary>
