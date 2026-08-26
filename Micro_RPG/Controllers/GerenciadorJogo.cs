@@ -23,7 +23,7 @@ public class GerenciadorJogo
     {
         _personagem = PersonagemFactory.CriarPersonagem(tipoPersonagem, nomePersonagem);
         _hordaInimigo = new List<Mob>();
-        _turno = 25;
+        _turno = 0;
     }
 
     /// <summary>
@@ -105,7 +105,7 @@ public class GerenciadorJogo
     /// Ataca um inimigo e retorna se o ataque acertou e o dano causado.
     /// </summary>
     /// <returns>Uma tupla com o resultado do ataque.</returns>
-    public (bool Acertou, int Dano) AtacarMob()
+    public (bool Acertou, int Dano, bool Critico) AtacarMob()
     {
         return Atacar(_personagem);
     }
@@ -114,7 +114,7 @@ public class GerenciadorJogo
     /// Ataca o personagem e retorna se o ataque acertou e o dano causado.
     /// </summary>
     /// <returns>Uma tupla com o resultado do ataque.</returns>
-    public (bool Acertou, int Dano) AtacarPersonagem()
+    public (bool Acertou, int Dano, bool Critico) AtacarPersonagem()
     {
         return Atacar(_hordaInimigo[0]);
     }
@@ -124,32 +124,30 @@ public class GerenciadorJogo
     /// </summary>
     /// <param name="entidade">A entidade a ser atacada.</param>
     /// <returns>Uma tupla com o resultado do ataque.</returns>
-    private (bool Acertou, int Dano) Atacar(Entidade entidade)
+    private (bool Acertou, int Dano, bool Critico) Atacar(Entidade entidade)
     {
-        int dano = entidade.Atacar();
+        var (dano, critico) = entidade.Atacar();
         bool recebeuDano = true;
 
         if (entidade is Personagem)
         {
             recebeuDano = _hordaInimigo[0].ReceberDano(dano);
-
-
         }
         else if (entidade is Mob)
         {
             recebeuDano = _personagem.ReceberDano(dano);
         }
 
-        return (recebeuDano, dano);
+        return (recebeuDano, dano, critico );
     }
 
     /// <summary>
     /// Remove um mob derrotado da horda.
     /// </summary>
     /// <returns>true se um mob foi removido, false caso contrário.</returns>
-    public Mob? RemoverMobDerrotado()
+    private Mob? RemoverMobDerrotado()
     {
-        if (_hordaInimigo.Count > 0 && _hordaInimigo[0].Vida <= 0)
+        if (_hordaInimigo.Count > 0)
         {
             Mob mobEliminado = _hordaInimigo[0];
 
@@ -159,6 +157,18 @@ public class GerenciadorJogo
         }
 
         return null;
+    }
+
+    public bool TurnoCompleto()
+    {
+        if (_hordaInimigo[0].Vida <= 0)
+        {
+            Mob mobEliminado = RemoverMobDerrotado();
+
+            return mobEliminado != null;
+        }
+
+        return false;
     }
 
     /// <summary>
