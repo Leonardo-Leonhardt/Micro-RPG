@@ -48,6 +48,8 @@ O Guerreiro é a classe inicial jogável que herda de `Personagem`:
 
 - **Multiplicação de Inimigos (Horda):** Fora dos turnos de chefe, a quantidade de inimigos simultâneos cresce a cada 10 turnos, com um teto de **5 monstros por combate**.
 
+- **Recompensa de Chefe:** 🎁 Ao derrotar o Goblin Hero, o personagem recebe **ambos os aprimoramentos no mesmo turno** (+Vida Máxima E +Dano), aplicados via `BonusDerrotaBoss()`.
+
 ---
 
 ## 👾 Elenco de Inimigos
@@ -140,10 +142,12 @@ Responsável por gerenciar o ciclo de vida do jogo, agregação das entidades e 
   - `_turno : int`
 - **Métodos:**
   - `EscolherBonus(escolha : string) : int` — Aplica o bônus de evolução (vida ou dano) escolhido pelo jogador e retorna os pontos ganhos.
+  - `BonusDerrotaBoss() : (int vida, int dano)` *(privado)* — Concede os dois aprimoramentos (vida e dano) de uma vez, usado ao derrotar o Goblin Hero.
   - `CriarMobs() : int` — Avança o turno e instancia os inimigos correspondentes (horda comum ou o Goblin Hero nos turnos de chefe), retornando a quantidade de mobs comuns criados.
   - `AtacarMob() : (bool Acertou, int Dano, bool Critico)` — Executa o ataque do jogador contra o primeiro mob da horda.
   - `AtacarPersonagem() : (bool Acertou, int Dano, bool Critico)` — Executa o ataque do primeiro mob da horda contra o jogador.
-  - `TurnoCompleto() : bool` — Verifica se o mob no topo da horda foi derrotado e, em caso positivo, o remove da lista, retornando `true`.
+  - `VerificarMobDerrotado() : Mob?` — Verifica se o mob no topo da horda foi derrotado; em caso positivo, o remove da lista e o retorna (caso contrário, retorna `null`).
+  - `TurnoCompleto(nome : string) : bool` — Verifica se a horda ficou vazia após a remoção de um mob; em caso positivo, concede a recompensa dupla (`BonusDerrotaBoss()`) quando `nome` for `"Goblin Hero"` e retorna `true`.
   - `TurnoConcluido() : bool` — Verifica se a horda foi totalmente derrotada e, em caso positivo, aciona a recuperação de vida do jogador.
   - `VerificarGameOver() : bool` — Retorna `true` caso o HP do jogador seja `≤ 0`.
   - `Turno`, `NomePersonagem`, `Personagem`, `HordaInimigo` — Propriedades de leitura para o estado atual da partida.
@@ -223,7 +227,7 @@ Micro-RPG/
 - [ ] Integrar o menu (`Menu`, `CriarPersonagem`) ao ciclo de combate já funcional no `Main`
 - [ ] Adicionar novas classes jogáveis além do Guerreiro
 - [ ] Adicionar testes automatizados para as regras de combate e escalonamento
-- [ ] Adicionar Drop Duplo: o jogador recebe ambos os aprimoramentos (+HP Máximo E +Dano) ao derrotar o Goblin Hero
+- [x] Adicionar Drop Duplo: o jogador recebe ambos os aprimoramentos (+HP Máximo E +Dano) ao derrotar o Goblin Hero
 - [ ] Atualizar o diagrama de classes com as factories
 
 ---
