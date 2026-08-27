@@ -59,7 +59,7 @@ public abstract class Mob : Entidade
     protected static int GeraDano(int turnoAtual, int danoBase, int bonusDano)
     {
         int ciclo = (turnoAtual - 1) / 5;
-        int bonusCiclo = ciclo > 0 ? (ciclo / bonusDano) : 0;
+        int bonusCiclo = (int)Math.Round(ciclo * bonusDano / 7.0);
 
         return danoBase + bonusCiclo;
     }
