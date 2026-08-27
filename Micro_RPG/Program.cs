@@ -1,4 +1,5 @@
 ﻿using Micro_RPG.Controllers;
+using Micro_RPG.Models.Mobs;
 using Micro_RPG.Models.Factory;
 using Micro_RPG.Models.Personagens;
 
@@ -15,9 +16,10 @@ namespace Micro_RPG
 
         static void Main(string[] args)
         {
-            jogo = new GerenciadorJogo("Guerreiro", "Herói");
-            jogo.CriarMobs();
-            //CriarPersonagem();
+            //jogo = new GerenciadorJogo("Guerreiro", "Herói");
+            //jogo.CriarMobs();
+            CriarPersonagem();
+            CriarInimigo();
 
             for (int i = 0; i < 3; i++)
             {
@@ -28,8 +30,6 @@ namespace Micro_RPG
             Console.WriteLine(jogo.VerificarGameOver() == true ? "\nO jogo acabou!" : "\nO jogo continua...");
 
             AvancarTurno();
-
-            
 
             Console.WriteLine($"\nPersonagem: {jogo.Personagem.ToString()}");
             Console.WriteLine("Inimigos na horda:");
@@ -95,7 +95,7 @@ namespace Micro_RPG
             foreach (char c in texto)
             {
                 Console.Write(c);
-                int tempoEspera = (c == '.' || c == '!') ? 60 : 10;
+                int tempoEspera = (c == '.' || c == '!') ? 600 : 100;
                 Thread.Sleep(tempoEspera);
             }
         }
@@ -211,20 +211,24 @@ namespace Micro_RPG
             var (acertou, dano, critico) = jogo.AtacarMob();
 
 
-            ShowLoading(critico == true ? $"Ataque crítico! \nVocê acertou o inimigo e causou {dano} de dano!" : acertou ? $"\nVocê acertou o inimigo e causou {dano} de dano!" : "Você errou o ataque!");
+            ShowLoading(critico == true ? $"Ataque crítico! \nVocê acertou o inimigo e causou {dano} de dano!" : acertou ? $"\nVocê acertou o inimigo e causou {dano} de dano!" : "\nVocê errou o ataque!");
         }
 
         static void AtacarPersonagem()
         {
             var (acertou, dano, critico) = jogo.AtacarPersonagem();
 
-            ShowLoading(critico == true ? $"Ataque crítico! \nO {jogo.HordaInimigo[0].Nome} acertou você e causou {dano} de dano!" : acertou ? $"\nO {jogo.HordaInimigo[0].Nome} acertou você e causou {dano} de dano!" : "O inimigo errou o ataque!");
+            ShowLoading(critico == true ? $"\nAtaque crítico! \nO {jogo.HordaInimigo[0].Nome} acertou você e causou {dano} de dano!" : acertou ? $"\nO {jogo.HordaInimigo[0].Nome} acertou você e causou {dano} de dano!" : "\nO inimigo errou o ataque!");
         }
         #endregion
 
+
+        // falta da uma mexida para ver qundo o porssonagem morre
         static void AvancarTurno()
         {
-            if(jogo.TurnoCompleto() == true)
+            Mob mobAtual = jogo.VerificarMobDerrotado();
+
+            if (mobAtual == null ? jogo.TurnoCompleto(null) : jogo.TurnoCompleto(mobAtual.Nome))
             {
                 ShowLoading("Turno concluído! Avançando para o próximo turno...");
 

@@ -33,7 +33,7 @@ public class GerenciadorJogo
     /// <returns>O número de pontos de ganhos obtidos.</returns>
     public int EscolherBonus(string escolha)
     {
-        int up = 2;
+        int up = 1;
         double valor = Random.Shared.NextDouble();
 
         int pontosGanhos = valor switch
@@ -173,7 +173,7 @@ public class GerenciadorJogo
     /// </summary>
     /// <param name="nome">O nome do mob derrotado.</param>
     /// <returns>true se o turno foi completo, false caso contrário.</returns>
-    public bool TurnoCompleto(String nome)
+    public bool TurnoCompleto(String? nome)
     {
         if (_hordaInimigo.Count <= 0)
         {
