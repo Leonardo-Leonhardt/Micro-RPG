@@ -59,6 +59,15 @@ public class GerenciadorJogo
     }
 
     /// <summary>
+    /// Escolhe o bônus para o personagem após derrotar um boss.
+    /// </summary>
+    /// <returns>Uma tupla com os pontos de vida e dano ganhos.</returns>
+    private (int vida, int dano) BonusDerrotaBoss()
+    {
+        return (vida: EscolherBonus("vida"), dano: EscolherBonus("dano"));
+    }
+
+    /// <summary>
     /// Cria mobs para o turno atual. A cada 5 turnos, um "Goblin Hero" é criado. Nos outros turnos, uma quantidade de mobs é criada com base no número do turno.
     /// </summary>
     /// <returns>A quantidade de mobs criados.</returns>
@@ -159,16 +168,38 @@ public class GerenciadorJogo
         return null;
     }
 
-    public bool TurnoCompleto()
+    /// <summary>
+    /// Verifica se o turno foi completo, ou seja, se todos os inimigos foram derrotados. Se a horda de inimigos estiver vazia e o nome do mob for "Goblin Hero", um bônus é concedido ao personagem.
+    /// </summary>
+    /// <param name="nome">O nome do mob derrotado.</param>
+    /// <returns>true se o turno foi completo, false caso contrário.</returns>
+    public bool TurnoCompleto(String nome)
     {
-        if (_hordaInimigo[0].Vida <= 0)
+        if (_hordaInimigo.Count <= 0)
         {
-            Mob mobEliminado = RemoverMobDerrotado();
+            if (nome == "Goblin Hero")
+            {
+                BonusDerrotaBoss();
+            }
 
-            return mobEliminado != null;
+            return true;
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Verifica se o primeiro mob da horda foi derrotado. Se sim, ele é removido da horda e retornado. Caso contrário, retorna null.
+    /// </summary>
+    /// <returns>o mob derrotado ou null se nenhum mob foi derrotado.</returns>
+    public Mob? VerificarMobDerrotado()
+    {
+        if (_hordaInimigo[0].Vida <= 0)
+        {
+            return RemoverMobDerrotado();
+        }
+
+        return null;
     }
 
     /// <summary>
