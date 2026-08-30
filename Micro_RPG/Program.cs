@@ -31,7 +31,8 @@ namespace Micro_RPG
 
             AvancarTurno();
 
-            Console.WriteLine($"\nPersonagem: {jogo.Personagem.ToString()}");
+            Console.WriteLine($"\nPersonagem:" +
+                              $"\n{jogo.Personagem.ToString()}");
             Console.WriteLine("Inimigos na horda:");
             foreach (var mob in jogo.HordaInimigo)
             {
@@ -126,7 +127,7 @@ namespace Micro_RPG
         static void CriarPersonagem()
         {
             string cabeçalho = "CRIAÇÃO DE PERSONAGEM";
-
+            string mensagem = $"Criando personagem";
             string classPersonagem = EscolherPersonagem(cabeçalho);
 
             ShowCabecalho(cabeçalho);
@@ -135,11 +136,12 @@ namespace Micro_RPG
             string nome = Console.ReadLine();
 
             jogo = new GerenciadorJogo(classPersonagem, nome);
+                      
 
-            string mensagem = $"Criando personagem {jogo.NomePersonagem}...";
-            ShowLoading(mensagem, true);
-
-            ShowLoading($"Personagem {jogo.NomePersonagem} criado com sucesso!", true);
+            ShowCabecalho(cabeçalho);
+            ShowLoading($"\n{mensagem} {jogo.NomePersonagem}...");
+            ShowCabecalho(cabeçalho);
+            ShowLoading($"\nPersonagem {jogo.NomePersonagem} criado com sucesso!", false);
         }
 
         /// <summary>
@@ -167,13 +169,15 @@ namespace Micro_RPG
 
                     if (resultado != null)
                     {
-                        ShowLoading(mensagem + $"{resultado}!!!", true);
+                        ShowCabecalho(cabeçalho);
+                        ShowLoading($"\n{mensagem + resultado}!!!");
 
                         return resultado;
                     }
                 }
 
-                ShowLoading("Opção inválida!!!", true);
+                ShowCabecalho(cabeçalho);
+                ShowLoading("\nOpção inválida!!!",false);
                 ShowLoading("\nTente novamente...", false);
             }
         }
@@ -190,17 +194,19 @@ namespace Micro_RPG
 
             ShowCabecalho(cabeçalho);
 
-            ShowLoading("Gerando inimigo...");
+            ShowLoading("\nGerando inimigo...");
 
             int quantidadeDeMobs = jogo.CriarMobs();
 
             if (quantidadeDeMobs > 0)
             {
-                ShowLoading($"Quantidade de inimigos gerados: {quantidadeDeMobs}!!!", true);
+                ShowCabecalho(cabeçalho);
+                ShowLoading($"\nQuantidade de inimigos gerados: {quantidadeDeMobs}!!!", false);
             }
             else
             {
-                ShowLoading("1 Boss criado.", true);
+                ShowCabecalho(cabeçalho);
+                ShowLoading("\n1 Boss criado.", false);
             }
         }
         #endregion
@@ -211,7 +217,7 @@ namespace Micro_RPG
             var (acertou, dano, critico) = jogo.AtacarMob();
 
 
-            ShowLoading(critico == true ? $"Ataque crítico! \nVocê acertou o inimigo e causou {dano} de dano!" : acertou ? $"\nVocê acertou o inimigo e causou {dano} de dano!" : "\nVocê errou o ataque!");
+            ShowLoading(critico == true ? $"\nAtaque crítico! \nVocê acertou o inimigo e causou {dano} de dano!" : acertou ? $"\nVocê acertou o inimigo e causou {dano} de dano!" : "\nVocê errou o ataque!");
         }
 
         static void AtacarPersonagem()
@@ -230,12 +236,12 @@ namespace Micro_RPG
 
             if (mobAtual == null ? jogo.TurnoCompleto(null) : jogo.TurnoCompleto(mobAtual.Nome))
             {
-                ShowLoading("Turno concluído! Avançando para o próximo turno...");
+                ShowLoading("\nTurno concluído! Avançando para o próximo turno...");
 
             }
             else
             {
-                ShowLoading("Ainda há inimigos vivos! Não é possível avançar para o próximo turno.");
+                ShowLoading("\nAinda há inimigos vivos! Não é possível avançar para o próximo turno.");
             }
         }
 
