@@ -18,37 +18,60 @@ namespace Micro_RPG
             //CriarInimigo();
 
 
-            do
+            Mob mob = ExecutarCombate();
+
+            if (jogo.GameOver())
             {
-                AtacarInimigo();
-
-                if (!jogo.TurnoConcluido())
-                {
-                    AtacarPersonagem();
-                }
-
-                mobs = jogo.HordaInimigo;
-
-            } while (mobs.Count() == 0 && !jogo.VerificarGameOver());
-
-
-            Console.WriteLine(jogo.VerificarGameOver() == true ? $"\nVocê morreu!!! " +
+                ShowLoading(jogo.GameOver() == true ? $"\nVocê morreu!!! " +
                                                                  $"\nO jogo acabou!" :
                                                                  "\nO jogo continua...");
-
-
-
-            
-
-            Console.WriteLine($"\nPersonagem:" +
-                              $"\n{jogo.Personagem.ToString()}");
-            Console.WriteLine("Inimigos na horda:");
-            foreach (var mob in jogo.HordaInimigo)
-            {
-                Console.WriteLine(mob.ToString());
             }
+            else if (mob != null)
+            {
+                jogo.TurnoConcluido(mob.Nome);
 
+                ShowCabecalho($"Turno {jogo.Turno} finalisado");
+
+                Console.WriteLine($"\nPersonagem:" +
+                                  $"\n{jogo.Personagem.ToString()}");
+
+
+                int opcao = 0;
+
+                Console.WriteLine("\nEscolha seu bonus");
+                Console.WriteLine("1 - Vida");
+                Console.WriteLine("2 - Dano\n");
+
+                opcao = Convert.ToInt32(Console.ReadLine());
+
+                switch (opcao)
+                {
+                    case 1:
+                        jogo.EscolherBonus("vida");
+                        break;
+                    case 2:
+                        jogo.EscolherBonus("dano");
+                        break;
+                }
+
+
+
+
+
+
+                Console.WriteLine($"\nPersonagem:" +
+                                  $"\n{jogo.Personagem.ToString()}");
+                Console.WriteLine("Inimigos na horda:");
+                foreach (var moob in jogo.HordaInimigo)
+                {
+                    Console.WriteLine(moob.ToString());
+                }
+
+
+            }
         }
+
+
 
         #region Menus
         /// <summary>
@@ -111,11 +134,11 @@ namespace Micro_RPG
         }
         #endregion
 
-        #region Cabeçalho
+        #region cabecalho
         /// <summary>
-        /// Exibe um cabeçalho no console com o título fornecido, centralizado entre linhas de separação.
+        /// Exibe um cabecalho no console com o título fornecido, centralizado entre linhas de separação.
         /// </summary>
-        /// <param name="titulo">O título a ser exibido no cabeçalho.</param>
+        /// <param name="titulo">O título a ser exibido no cabecalho.</param>
         static void ShowCabecalho(string titulo)
         {
             Console.Clear();
@@ -129,17 +152,17 @@ namespace Micro_RPG
             CriarPersonagem();
         }
 
-        #region Criar Personagem
+        #region Criações
         /// <summary>
         /// Permite ao jogador criar um personagem, escolhendo sua classe e fornecendo um nome. O método exibe mensagens de carregamento durante o processo de criação do personagem.
         /// </summary>
         static void CriarPersonagem()
         {
-            string cabeçalho = "CRIAÇÃO DE PERSONAGEM";
+            string cabecalho = "CRIAÇÃO DE PERSONAGEM";
             string mensagem = $"Criando personagem";
-            string classPersonagem = EscolherPersonagem(cabeçalho);
+            string classPersonagem = EscolherPersonagem(cabecalho);
 
-            ShowCabecalho(cabeçalho);
+            ShowCabecalho(cabecalho);
 
             Console.WriteLine("\nDigite o nome do seu personagem:");
             string nome = Console.ReadLine();
@@ -147,24 +170,24 @@ namespace Micro_RPG
             jogo = new GerenciadorJogo(classPersonagem, nome);
 
 
-            ShowCabecalho(cabeçalho);
+            ShowCabecalho(cabecalho);
             ShowLoading($"\n{mensagem} {jogo.NomePersonagem}...");
-            ShowCabecalho(cabeçalho);
+            ShowCabecalho(cabecalho);
             ShowLoading($"\nPersonagem {jogo.NomePersonagem} criado com sucesso!", false);
         }
 
         /// <summary>
         /// Permite ao jogador escolher o tipo de personagem que deseja criar, exibindo opções disponíveis e validando a entrada do usuário. Retorna o tipo de personagem escolhido como uma string.
         /// </summary>
-        /// <param name="cabeçalho">O cabeçalho a ser exibido no menu de escolha.</param>
+        /// <param name="cabecalho">O cabecalho a ser exibido no menu de escolha.</param>
         /// <returns>O tipo de personagem escolhido.</returns>
-        static string EscolherPersonagem(string cabeçalho)
+        static string EscolherPersonagem(string cabecalho)
         {
             string mensagem = $"Personagem escolhido: ";
 
             while (true)
             {
-                ShowCabecalho(cabeçalho);
+                ShowCabecalho(cabecalho);
                 Console.WriteLine("\nEscolha o tipo de personagem:");
                 Console.WriteLine("1 - Guerreiro\n");
 
@@ -178,30 +201,28 @@ namespace Micro_RPG
 
                     if (resultado != null)
                     {
-                        ShowCabecalho(cabeçalho);
+                        ShowCabecalho(cabecalho);
                         ShowLoading($"\n{mensagem + resultado}!!!");
 
                         return resultado;
                     }
                 }
 
-                ShowCabecalho(cabeçalho);
+                ShowCabecalho(cabecalho);
                 ShowLoading("\nOpção inválida!!!", false);
                 ShowLoading("\nTente novamente...", false);
             }
         }
-        #endregion
 
-        #region Criar Inimigo
         /// <summary>
         /// Cria inimigos para o jogo, exibindo mensagens de carregamento durante o processo.
         /// O método chama a função <see cref="GerenciadorJogo.CriarMobs"/> do GerenciadorJogo e exibe a quantidade de inimigos gerados ou uma mensagem indicando que um Boss foi criado.
         /// </summary>
         static void CriarInimigo()
         {
-            string cabeçalho = "CRIAÇÃO DE INIMIGO";
+            string cabecalho = "CRIAÇÃO DE INIMIGO";
 
-            ShowCabecalho(cabeçalho);
+            ShowCabecalho(cabecalho);
 
             ShowLoading("\nGerando inimigo...");
 
@@ -209,12 +230,12 @@ namespace Micro_RPG
 
             if (quantidadeDeMobs > 0)
             {
-                ShowCabecalho(cabeçalho);
+                ShowCabecalho(cabecalho);
                 ShowLoading($"\nQuantidade de inimigos gerados: {quantidadeDeMobs}!!!", false);
             }
             else
             {
-                ShowCabecalho(cabeçalho);
+                ShowCabecalho(cabecalho);
                 ShowLoading("\n1 Boss criado.", false);
             }
         }
@@ -237,17 +258,32 @@ namespace Micro_RPG
         }
         #endregion
 
-
-        // falta da uma mexida para ver qundo o porssonagem morre
-        static void AvancarTurno()
+        #region Combate
+        static Mob? ExecutarCombate()
         {
-            Mob mobAtual = jogo.VerificarMobDerrotado();
+            List<Mob> mobs;
 
-            if (mobAtual == null ? jogo.TurnoCompleto(null) : jogo.TurnoCompleto(mobAtual.Nome))
+            do
             {
-                ShowLoading("\nTurno concluído! Avançando para o próximo turno...");
-            }
+                Mob mob;
+                mobs = jogo.HordaInimigo;
+
+                AtacarInimigo();
+
+                if (mobs[0].Vida <= 0)
+                {
+                    return mob = jogo.VerificarMobDerrotado();
+                }
+
+                AtacarPersonagem();
+
+            } while (mobs.Count() != 0 && !jogo.GameOver());
+
+            return null;
         }
+        #endregion
+
+
 
     }
 }
