@@ -6,7 +6,7 @@ Um jogo de combate por turnos desenvolvido em **C#** via Console App, focado em 
 
 ## 🚧 Status do Projeto
 
-Em desenvolvimento ativo. As classes de domínio (personagem, mobs, factories e o `GerenciadorJogo`) já implementam toda a lógica de combate, evolução e escalonamento de inimigos. O `Main` já executa um ciclo real de combate (ataques trocados, verificação de crítico, checagem de game over e avanço de turno), mas ainda como um cenário fixo de teste — o menu completo (`Menu()`, `CriarPersonagem()`) ainda não está integrado a esse fluxo.
+Em desenvolvimento ativo. As classes de domínio (personagem, mobs, factories e o `GerenciadorJogo`) já implementam toda a lógica de combate, evolução e escalonamento de inimigos. O `Main` agora executa um turno completo de forma interativa: resolve o combate golpe a golpe (`ExecutarCombate`), verifica o game over, aplica a recuperação de vida e a recompensa de chefe quando cabível, e deixa o jogador escolher o bônus (vida ou dano) pelo console. Ainda falta encadear isso num laço que passe automaticamente para os turnos seguintes, e ligar o menu (`Menu()`, `CriarPersonagem()`) — hoje o personagem ainda é criado de forma fixa (`"Guerreiro"`, `"Herói"`) no início do `Main`.
 
 ---
 
@@ -31,10 +31,10 @@ O Guerreiro é a classe inicial jogável que herda de `Personagem`:
 
 ## ⚖️ Mecânicas de Jogo & Escalabilidade
 
-- **Evolução do Jogador:** O jogador escolhe entre aprimorar **Vida Máxima** ou **Dano** (`EscolherBonus`). O valor base é **+2**, com chances de sorte crítica (*RNG*):
-  - **Ganho Padrão:** +2 (Base)
-  - **Sorte Rara (5% de chance - `0.05`):** +3
-  - **Sorte Lendária (0.01% de chance - `0.0001`):** +4
+- **Evolução do Jogador:** O jogador escolhe entre aprimorar **Vida Máxima** ou **Dano** (`EscolherBonus`). O valor base é **+1**, com chances de sorte crítica (*RNG*):
+  - **Ganho Padrão:** +1 (Base)
+  - **Sorte Rara (5% de chance - `0.05`):** +2
+  - **Sorte Lendária (0.01% de chance - `0.0001`):** +3
 
 - **Regeneração de Vida:** Ao derrotar todos os inimigos de um turno, o personagem tenta recuperar vida:
   - **Padrão:** Restaura **50% da Vida Máxima**.
@@ -44,7 +44,7 @@ O Guerreiro é a classe inicial jogável que herda de `Personagem`:
   - 👺 **Goblin (Tank):** Foco em evasão (20%). Vida base 15 (+8 por ciclo), dano base 3 (+4 por ciclo), 10% de crítico.
   - 💀 **Esqueleto (Ataque/DPS):** Foco em dano. Vida base 25 (+5 por ciclo), dano base 6 (+7 por ciclo), 5% de crítico e 10% de evasão.
   - 👑 **Goblin Hero (Chefe):** Surge sozinho a cada turno múltiplo de 5, substituindo a horda comum daquele turno. Vida base 50 (+10 por ciclo), dano base 10 (+5 por ciclo), 15% de crítico e 25% de evasão.
-  - A vida e o dano de todos os mobs escalam tanto pelo **ciclo de 5 turnos** em que se encontram quanto pela posição dentro do ciclo (`GeraVida` / `GeraDano`), ficando progressivamente mais difíceis.
+  - A vida e o dano de todos os mobs escalam tanto pelo **ciclo de 5 turnos** em que se encontram quanto pela posição dentro do ciclo (`GeraVida` / `GeraDano`), ficando progressivamente mais difíceis. O bônus de dano por ciclo é calculado com arredondamento (`Math.Round`) em vez de divisão inteira truncada, garantindo um crescimento gradual em vez de ficar travado por dezenas de turnos.
 
 - **Multiplicação de Inimigos (Horda):** Fora dos turnos de chefe, a quantidade de inimigos simultâneos cresce a cada 10 turnos, com um teto de **5 monstros por combate**.
 
@@ -147,9 +147,8 @@ Responsável por gerenciar o ciclo de vida do jogo, agregação das entidades e 
   - `AtacarMob() : (bool Acertou, int Dano, bool Critico)` — Executa o ataque do jogador contra o primeiro mob da horda.
   - `AtacarPersonagem() : (bool Acertou, int Dano, bool Critico)` — Executa o ataque do primeiro mob da horda contra o jogador.
   - `VerificarMobDerrotado() : Mob?` — Verifica se o mob no topo da horda foi derrotado; em caso positivo, o remove da lista e o retorna (caso contrário, retorna `null`).
-  - `TurnoCompleto(nome : string) : bool` — Verifica se a horda ficou vazia após a remoção de um mob; em caso positivo, concede a recompensa dupla (`BonusDerrotaBoss()`) quando `nome` for `"Goblin Hero"` e retorna `true`.
-  - `TurnoConcluido() : bool` — Verifica se a horda foi totalmente derrotada e, em caso positivo, aciona a recuperação de vida do jogador.
-  - `VerificarGameOver() : bool` — Retorna `true` caso o HP do jogador seja `≤ 0`.
+  - `TurnoConcluido(nome : string?) : bool` — Verifica se a horda ficou vazia; em caso positivo, aciona a recuperação de vida do jogador, concede a recompensa dupla (`BonusDerrotaBoss()`) quando `nome` for `"Goblin Hero"` e retorna `true`.
+  - `GameOver() : bool` — Retorna `true` caso o HP do jogador seja `≤ 0`.
   - `Turno`, `NomePersonagem`, `Personagem`, `HordaInimigo` — Propriedades de leitura para o estado atual da partida.
 
 ---
@@ -224,7 +223,10 @@ Micro-RPG/
 
 - [x] Corrigir o valor inicial do contador de turnos (`_turno` começava em 25 por engano; agora começa em 0)
 - [x] Fazer `Atacar()` informar se o golpe foi crítico, para uso na exibição do combate
-- [ ] Integrar o menu (`Menu`, `CriarPersonagem`) ao ciclo de combate já funcional no `Main`
+- [x] Corrigir a escalada de dano dos inimigos (`GeraDano` usava divisão inteira e ficava travada por muitos turnos)
+- [x] Ajustar o ganho de evolução do jogador (`EscolherBonus`) para não escalar rápido demais em relação aos inimigos
+- [ ] Colocar o `Main` em um laço que avance automaticamente pelos turnos (hoje ele resolve só um turno por execução)
+- [ ] Ligar o menu (`Menu`, `CriarPersonagem`) à criação do personagem, hoje fixa em `"Guerreiro"`/`"Herói"`
 - [ ] Adicionar novas classes jogáveis além do Guerreiro
 - [ ] Adicionar testes automatizados para as regras de combate e escalonamento
 - [x] Adicionar Drop Duplo: o jogador recebe ambos os aprimoramentos (+HP Máximo E +Dano) ao derrotar o Goblin Hero
