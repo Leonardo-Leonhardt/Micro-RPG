@@ -9,27 +9,36 @@ namespace Micro_RPG
     {
         static GerenciadorJogo jogo;
 
-
-
-
-
-
         static void Main(string[] args)
         {
-            //jogo = new GerenciadorJogo("Guerreiro", "Herói");
-            //jogo.CriarMobs();
-            CriarPersonagem();
-            CriarInimigo();
+            List<Mob> mobs;
+            jogo = new GerenciadorJogo("Guerreiro", "Herói");
+            jogo.CriarMobs();
+            //CriarPersonagem();
+            //CriarInimigo();
 
-            for (int i = 0; i < 3; i++)
+
+            do
             {
                 AtacarInimigo();
-                AtacarPersonagem();
-            }
 
-            Console.WriteLine(jogo.VerificarGameOver() == true ? "\nO jogo acabou!" : "\nO jogo continua...");
+                if (!jogo.TurnoConcluido())
+                {
+                    AtacarPersonagem();
+                }
 
-            AvancarTurno();
+                mobs = jogo.HordaInimigo;
+
+            } while (mobs.Count() == 0 && !jogo.VerificarGameOver());
+
+
+            Console.WriteLine(jogo.VerificarGameOver() == true ? $"\nVocê morreu!!! " +
+                                                                 $"\nO jogo acabou!" :
+                                                                 "\nO jogo continua...");
+
+
+
+            
 
             Console.WriteLine($"\nPersonagem:" +
                               $"\n{jogo.Personagem.ToString()}");
@@ -96,7 +105,7 @@ namespace Micro_RPG
             foreach (char c in texto)
             {
                 Console.Write(c);
-                int tempoEspera = (c == '.' || c == '!') ? 600 : 100;
+                int tempoEspera = (c == '.' || c == '!') ? 60 : 10;
                 Thread.Sleep(tempoEspera);
             }
         }
@@ -136,7 +145,7 @@ namespace Micro_RPG
             string nome = Console.ReadLine();
 
             jogo = new GerenciadorJogo(classPersonagem, nome);
-                      
+
 
             ShowCabecalho(cabeçalho);
             ShowLoading($"\n{mensagem} {jogo.NomePersonagem}...");
@@ -177,7 +186,7 @@ namespace Micro_RPG
                 }
 
                 ShowCabecalho(cabeçalho);
-                ShowLoading("\nOpção inválida!!!",false);
+                ShowLoading("\nOpção inválida!!!", false);
                 ShowLoading("\nTente novamente...", false);
             }
         }
@@ -237,11 +246,6 @@ namespace Micro_RPG
             if (mobAtual == null ? jogo.TurnoCompleto(null) : jogo.TurnoCompleto(mobAtual.Nome))
             {
                 ShowLoading("\nTurno concluído! Avançando para o próximo turno...");
-
-            }
-            else
-            {
-                ShowLoading("\nAinda há inimigos vivos! Não é possível avançar para o próximo turno.");
             }
         }
 
