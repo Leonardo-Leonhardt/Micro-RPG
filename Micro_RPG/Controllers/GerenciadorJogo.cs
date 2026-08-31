@@ -15,6 +15,7 @@ public class GerenciadorJogo
     private int _turno;
     private string[] _nomeMobs = { "Goblin", "Esqueleto" };
 
+    #region Criação
     /// <summary>
     /// Inicializa uma nova instância do GerenciadorJogo com o tipo de personagem especificado.
     /// </summary>
@@ -26,6 +27,33 @@ public class GerenciadorJogo
         _turno = 0;
     }
 
+    /// <summary>
+    /// Cria mobs para o turno atual. A cada 5 turnos, um "Goblin Hero" é criado. Nos outros turnos, uma quantidade de mobs é criada com base no número do turno.
+    /// </summary>
+    /// <returns>A quantidade de mobs criados.</returns>
+    public int CriarMobs()
+    {
+        ++_turno;
+
+        if (_turno % 5 == 0)
+        {
+            _hordaInimigo.Add(MobFactory.CriarMob("Goblin Hero", _turno));
+
+            return 0;
+        }
+
+        int quantidadeMobs = Math.Min(1 + ((_turno - 1) / 10), 5);
+
+        for (int i = 0; i < quantidadeMobs; i++)
+        {
+            _hordaInimigo.Add(MobFactory.CriarMob(_nomeMobs[Random.Shared.Next(0, _nomeMobs.Length)], _turno));
+        }
+
+        return quantidadeMobs;
+    }
+    #endregion
+
+    #region Bonus
     /// <summary>
     /// Escolhe o bônus para o personagem com base na escolha.
     /// </summary>
@@ -68,40 +96,6 @@ public class GerenciadorJogo
     }
 
     /// <summary>
-    /// Cria mobs para o turno atual. A cada 5 turnos, um "Goblin Hero" é criado. Nos outros turnos, uma quantidade de mobs é criada com base no número do turno.
-    /// </summary>
-    /// <returns>A quantidade de mobs criados.</returns>
-    public int CriarMobs()
-    {
-        ++_turno;
-
-        if (_turno % 5 == 0)
-        {
-            _hordaInimigo.Add(MobFactory.CriarMob("Goblin Hero", _turno));
-
-            return 0;
-        }
-
-        int quantidadeMobs = Math.Min(1 + ((_turno - 1) / 10), 5);
-
-        for (int i = 0; i < quantidadeMobs; i++)
-        {
-            _hordaInimigo.Add(MobFactory.CriarMob(_nomeMobs[Random.Shared.Next(0, _nomeMobs.Length)], _turno));
-        }
-
-        return quantidadeMobs;
-    }
-
-    /// <summary>
-    /// Verifica se o jogo terminou.
-    /// </summary>
-    /// <returns>true se o jogo terminou, false caso contrário.</returns>
-    public bool VerificarGameOver()
-    {
-        return _personagem.Vida <= 0;
-    }
-
-    /// <summary>
     /// Tenta recuperar vida do personagem.
     /// </summary>
     /// <returns>Uma tupla com o resultado da recuperação de vida.</returns>
@@ -109,7 +103,34 @@ public class GerenciadorJogo
     {
         return _personagem.RecuperarVida();
     }
+    #endregion
 
+    #region Derrotas
+    /// <summary>
+    /// Verifica se o jogo terminou.
+    /// </summary>
+    /// <returns>true se o jogo terminou, false caso contrário.</returns>
+    public bool GameOver()
+    {
+        return _personagem.Vida <= 0;
+    }
+
+    /// <summary>
+    /// Verifica se o primeiro mob da horda foi derrotado. Se sim, ele é removido da horda e retornado. Caso contrário, retorna null.
+    /// </summary>
+    /// <returns>o mob derrotado ou null se nenhum mob foi derrotado.</returns>
+    public Mob? VerificarMobDerrotado()
+    {
+        if (_hordaInimigo[0].Vida <= 0)
+        {
+            return RemoverMobDerrotado();
+        }
+
+        return null;
+    }
+    #endregion
+
+    #region Ataques
     /// <summary>
     /// Ataca um inimigo e retorna se o ataque acertou e o dano causado.
     /// </summary>
@@ -147,9 +168,11 @@ public class GerenciadorJogo
             recebeuDano = _personagem.ReceberDano(dano);
         }
 
-        return (recebeuDano, dano, critico );
+        return (recebeuDano, dano, critico);
     }
+    #endregion
 
+    #region Remover Mortos
     /// <summary>
     /// Remove um mob derrotado da horda.
     /// </summary>
@@ -167,16 +190,21 @@ public class GerenciadorJogo
 
         return null;
     }
+    #endregion
 
+    #region Turno Concluido
     /// <summary>
-    /// Verifica se o turno foi completo, ou seja, se todos os inimigos foram derrotados. Se a horda de inimigos estiver vazia e o nome do mob for "Goblin Hero", um bônus é concedido ao personagem.
+    /// Verifica se a horda atual de inimigos foi totalmente eliminada. 
+    /// Em caso positivo, restaura a vida do personagem e concede um bônus especial caso o último inimigo seja o Goblin Hero.
     /// </summary>
-    /// <param name="nome">O nome do mob derrotado.</param>
-    /// <returns>true se o turno foi completo, false caso contrário.</returns>
-    public bool TurnoCompleto(String? nome)
+    /// <param name="nome">O nome do último mob derrotado.</param>
+    /// <returns><c>true</c> se a horda foi derrotada e o turno foi concluído; caso contrário, <c>false</c>.</returns>
+    public bool TurnoConcluido(String? nome)
     {
         if (_hordaInimigo.Count <= 0)
         {
+            RecuperarVida();
+
             if (nome == "Goblin Hero")
             {
                 BonusDerrotaBoss();
@@ -187,34 +215,7 @@ public class GerenciadorJogo
 
         return false;
     }
-
-    /// <summary>
-    /// Verifica se o primeiro mob da horda foi derrotado. Se sim, ele é removido da horda e retornado. Caso contrário, retorna null.
-    /// </summary>
-    /// <returns>o mob derrotado ou null se nenhum mob foi derrotado.</returns>
-    public Mob? VerificarMobDerrotado()
-    {
-        if (_hordaInimigo[0].Vida <= 0)
-        {
-            return RemoverMobDerrotado();
-        }
-
-        return null;
-    }
-
-    /// <summary>
-    /// Verifica se o turno foi concluído, ou seja, se todos os inimigos foram derrotados. Se a horda de inimigos estiver vazia, o personagem tenta recuperar vida.
-    /// </summary>
-    /// <returns>true se o turno foi concluído, false caso contrário.</returns>
-    public bool TurnoConcluido()
-    {
-        if(_hordaInimigo.Count == 0)
-        {
-            RecuperarVida();
-        }
-
-        return _hordaInimigo.Count == 0;
-    }
+    #endregion
 
     /// <summary>
     /// Retorna o Turno atual do jogo.
