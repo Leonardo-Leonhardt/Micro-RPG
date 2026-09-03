@@ -225,7 +225,6 @@ Micro-RPG/
 - [x] Ajustar o ganho de evolução do jogador (`EscolherBonus`) para não escalar rápido demais em relação aos inimigos
 - [x] Colocar o `Main` em um laço que avance automaticamente pelos turnos
 - [x] Ligar a criação do personagem (`CriarPersonagem`) ao fluxo do jogo
-- [ ] Ligar a tela de boas-vindas (`Menu()`) ao `Main` (hoje o jogo pula direto para `IniciarJogo()`)
 - [ ] Adicionar novas classes jogáveis além do Guerreiro
 - [x] Adicionar Drop Duplo: o jogador recebe ambos os aprimoramentos (+HP Máximo E +Dano) ao derrotar o Goblin Hero
 - [x] Atualizar o diagrama de classes com as factories
