@@ -59,17 +59,19 @@ public class GerenciadorJogo
     /// </summary>
     /// <param name="escolha">A escolha do personagem.</param>
     /// <returns>O número de pontos de ganhos obtidos.</returns>
-    public int EscolherBonus(string escolha)
+    public (int pontosGanhos, bool critico) EscolherBonus(string escolha)
     {
         int up = 1;
         double valor = Random.Shared.NextDouble();
 
         int pontosGanhos = valor switch
         {
-            < 0.0001 => up + 2,
+            < 0.0001 => up + 2 ,
             < 0.05 => up + 1,
             _ => up
         };
+
+        bool critico = valor < 0.05;
 
         escolha = escolha.ToLower();
 
@@ -82,7 +84,7 @@ public class GerenciadorJogo
             _personagem.AumentarDano(pontosGanhos);
         }
 
-        return pontosGanhos;
+        return (pontosGanhos, critico);
 
     }
 
@@ -92,7 +94,7 @@ public class GerenciadorJogo
     /// <returns>Uma tupla com os pontos de vida e dano ganhos.</returns>
     private (int vida, int dano) BonusDerrotaBoss()
     {
-        return (vida: EscolherBonus("vida"), dano: EscolherBonus("dano"));
+        return (vida: EscolherBonus("vida").pontosGanhos, dano: EscolherBonus("dano").pontosGanhos);
     }
 
     /// <summary>
