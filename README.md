@@ -6,7 +6,7 @@ Um jogo de combate por turnos desenvolvido em **C#** via Console App, focado em 
 
 ## 🚧 Status do Projeto
 
-Em desenvolvimento ativo. As classes de domínio (personagem, mobs, factories e o `GerenciadorJogo`) já implementam toda a lógica de combate, evolução e escalonamento de inimigos. O `Main` agora executa um turno completo de forma interativa: resolve o combate golpe a golpe (`ExecutarCombate`), verifica o game over, aplica a recuperação de vida e a recompensa de chefe quando cabível, e deixa o jogador escolher o bônus (vida ou dano) pelo console. Ainda falta encadear isso num laço que passe automaticamente para os turnos seguintes, e ligar o menu (`Menu()`, `CriarPersonagem()`) — hoje o personagem ainda é criado de forma fixa (`"Guerreiro"`, `"Herói"`) no início do `Main`.
+Em desenvolvimento ativo, mas já **jogável de ponta a ponta**. O `Main` chama `IniciarJogo()`, que roda `CriarPersonagem()` (escolha de classe e nome via console) e depois entra num laço `do...while` que repete automaticamente: criação de inimigos do turno, combate golpe a golpe, recuperação de vida / recompensa de chefe ao concluir o turno, escolha de bônus (vida ou dano) e verificação de game over — até o jogador morrer. A tela de boas-vindas (`Menu()`, com escolha de classe antes mesmo de pedir o nome) existe no código mas ainda não é chamada a partir do `Main`.
 
 ---
 
@@ -61,9 +61,7 @@ O Guerreiro é a classe inicial jogável que herda de `Personagem`:
 
 ## 📐 Estrutura de Classes (UML)
 
-![Diagrama de Classes V1](docs/diagramas/diagrama-classes-v1.png)
-
-> ℹ️ O diagrama reflete a v1 do projeto. As classes de `Factory` (`PersonagemFactory`, `MobFactory`) foram adicionadas posteriormente e ainda não constam na imagem.
+![Diagrama de Classes](docs/diagramas/diagrama-classes-v1.png)
 
 ### `Entidade` (Classe Abstrata Base)
 Classe fundamental que centraliza os atributos e regras de combate compartilhados por todas as criaturas do jogo.
@@ -141,13 +139,13 @@ Responsável por gerenciar o ciclo de vida do jogo, agregação das entidades e 
   - `_hordaInimigo : List<Mob>`
   - `_turno : int`
 - **Métodos:**
-  - `EscolherBonus(escolha : string) : int` — Aplica o bônus de evolução (vida ou dano) escolhido pelo jogador e retorna os pontos ganhos.
+  - `EscolherBonus(escolha : string) : (int pontosGanhos, bool critico)` — Aplica o bônus de evolução (vida ou dano) escolhido pelo jogador, retornando os pontos ganhos e se a sorte crítica (Rara ou Lendária) foi acionada.
   - `BonusDerrotaBoss() : (int vida, int dano)` *(privado)* — Concede os dois aprimoramentos (vida e dano) de uma vez, usado ao derrotar o Goblin Hero.
   - `CriarMobs() : int` — Avança o turno e instancia os inimigos correspondentes (horda comum ou o Goblin Hero nos turnos de chefe), retornando a quantidade de mobs comuns criados.
   - `AtacarMob() : (bool Acertou, int Dano, bool Critico)` — Executa o ataque do jogador contra o primeiro mob da horda.
   - `AtacarPersonagem() : (bool Acertou, int Dano, bool Critico)` — Executa o ataque do primeiro mob da horda contra o jogador.
   - `VerificarMobDerrotado() : Mob?` — Verifica se o mob no topo da horda foi derrotado; em caso positivo, o remove da lista e o retorna (caso contrário, retorna `null`).
-  - `TurnoConcluido(nome : string?) : bool` — Verifica se a horda ficou vazia; em caso positivo, aciona a recuperação de vida do jogador, concede a recompensa dupla (`BonusDerrotaBoss()`) quando `nome` for `"Goblin Hero"` e retorna `true`.
+  - `TurnoConcluido(nome : string?) : (bool concluido, int vidaRecuperada)` — Verifica se a horda ficou vazia; em caso positivo, aciona a recuperação de vida do jogador (retornando o quanto foi recuperado), concede a recompensa dupla (`BonusDerrotaBoss()`) quando `nome` for `"Goblin Hero"` e retorna `true`.
   - `GameOver() : bool` — Retorna `true` caso o HP do jogador seja `≤ 0`.
   - `Turno`, `NomePersonagem`, `Personagem`, `HordaInimigo` — Propriedades de leitura para o estado atual da partida.
 
@@ -225,12 +223,12 @@ Micro-RPG/
 - [x] Fazer `Atacar()` informar se o golpe foi crítico, para uso na exibição do combate
 - [x] Corrigir a escalada de dano dos inimigos (`GeraDano` usava divisão inteira e ficava travada por muitos turnos)
 - [x] Ajustar o ganho de evolução do jogador (`EscolherBonus`) para não escalar rápido demais em relação aos inimigos
-- [ ] Colocar o `Main` em um laço que avance automaticamente pelos turnos (hoje ele resolve só um turno por execução)
-- [ ] Ligar o menu (`Menu`, `CriarPersonagem`) à criação do personagem, hoje fixa em `"Guerreiro"`/`"Herói"`
+- [x] Colocar o `Main` em um laço que avance automaticamente pelos turnos
+- [x] Ligar a criação do personagem (`CriarPersonagem`) ao fluxo do jogo
+- [ ] Ligar a tela de boas-vindas (`Menu()`) ao `Main` (hoje o jogo pula direto para `IniciarJogo()`)
 - [ ] Adicionar novas classes jogáveis além do Guerreiro
-- [ ] Adicionar testes automatizados para as regras de combate e escalonamento
 - [x] Adicionar Drop Duplo: o jogador recebe ambos os aprimoramentos (+HP Máximo E +Dano) ao derrotar o Goblin Hero
-- [ ] Atualizar o diagrama de classes com as factories
+- [x] Atualizar o diagrama de classes com as factories
 
 ---
 
