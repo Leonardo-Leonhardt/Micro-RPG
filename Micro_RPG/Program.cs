@@ -17,45 +17,6 @@ namespace Micro_RPG
         }
         #endregion
 
-        #region Menus
-        /// <summary>
-        /// Exibe o menu principal do jogo, permitindo ao jogador escolher sua classe ou sair do jogo.
-        /// </summary>
-        static void Menu()
-        {
-            ShowCabecalho("BEM-VINDO AO MINI RPG DE TERMINAL");
-
-            int opcao = 0;
-
-            Console.WriteLine("\nEscolha sua classe");
-            Console.WriteLine("1 - Guerreiro");
-            Console.WriteLine("0 - Sair\n");
-
-            opcao = Convert.ToInt32(Console.ReadLine());
-
-            switch (opcao)
-            {
-                case 0:
-                    Console.Clear();
-                    Console.WriteLine("Saindo do jogo...");
-                    Thread.Sleep(2000);
-                    break;
-                case 1:
-                    Console.WriteLine("\nVocê escolheu a classe Guerreiro!");
-                    Thread.Sleep(2000);
-                    IniciarJogo();
-                    break;
-                default:
-                    Console.Clear();
-                    Console.WriteLine("Opção inválida! Tente novamente.");
-                    Thread.Sleep(2000);
-                    Menu();
-                    break;
-            }
-            ;
-        }
-        #endregion
-
         #region ShowLoading
         /// <summary>
         /// Exibe uma animação de carregamento no console, imprimindo o texto fornecido caractere por caractere com um atraso entre cada caractere. Pode limpar a tela antes de exibir a animação, se especificado.
