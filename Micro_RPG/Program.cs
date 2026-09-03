@@ -9,69 +9,12 @@ namespace Micro_RPG
     {
         static GerenciadorJogo jogo;
 
+        #region Main
         static void Main(string[] args)
         {
-            List<Mob> mobs;
-            jogo = new GerenciadorJogo("Guerreiro", "Herói");
-            jogo.CriarMobs();
-            //CriarPersonagem();
-            //CriarInimigo();
-
-
-            Mob mob = ExecutarCombate();
-
-            if (jogo.GameOver())
-            {
-                ShowLoading(jogo.GameOver() == true ? $"\nVocê morreu!!! " +
-                                                                 $"\nO jogo acabou!" :
-                                                                 "\nO jogo continua...");
-            }
-            else if (mob != null)
-            {
-                jogo.TurnoConcluido(mob.Nome);
-
-                ShowCabecalho($"Turno {jogo.Turno} finalisado");
-
-                Console.WriteLine($"\nPersonagem:" +
-                                  $"\n{jogo.Personagem.ToString()}");
-
-
-                int opcao = 0;
-
-                Console.WriteLine("\nEscolha seu bonus");
-                Console.WriteLine("1 - Vida");
-                Console.WriteLine("2 - Dano\n");
-
-                opcao = Convert.ToInt32(Console.ReadLine());
-
-                switch (opcao)
-                {
-                    case 1:
-                        jogo.EscolherBonus("vida");
-                        break;
-                    case 2:
-                        jogo.EscolherBonus("dano");
-                        break;
-                }
-
-
-
-
-
-
-                Console.WriteLine($"\nPersonagem:" +
-                                  $"\n{jogo.Personagem.ToString()}");
-                Console.WriteLine("Inimigos na horda:");
-                foreach (var moob in jogo.HordaInimigo)
-                {
-                    Console.WriteLine(moob.ToString());
-                }
-
-
-            }
+            IniciarJogo();
         }
-
-
+        #endregion
 
         #region Menus
         /// <summary>
@@ -128,7 +71,7 @@ namespace Micro_RPG
             foreach (char c in texto)
             {
                 Console.Write(c);
-                int tempoEspera = (c == '.' || c == '!') ? 60 : 10;
+                int tempoEspera = (c == '.' || c == '!') ? 300 : 50;
                 Thread.Sleep(tempoEspera);
             }
         }
@@ -147,10 +90,37 @@ namespace Micro_RPG
             Console.WriteLine("=========================================");
         }
         #endregion
+
+        #region IniciarJogo
         static void IniciarJogo()
         {
             CriarPersonagem();
+
+            do
+            {
+                CriarInimigo();
+                Mob mob = ExecutarCombate();
+
+                if (jogo.GameOver())
+                {
+                    GameOver();
+                }
+                else if (mob != null)
+                {
+                    jogo.TurnoConcluido(mob.Nome);
+
+                    ShowCabecalho($"Turno {jogo.Turno} finalisado");
+
+                    Console.WriteLine($"\nPersonagem:" +
+                                      $"\n{jogo.Personagem.ToString()}");
+
+                    EscolherBonus();
+
+                }
+
+            } while (!jogo.GameOver());
         }
+        #endregion
 
         #region Criações
         /// <summary>
@@ -247,14 +217,18 @@ namespace Micro_RPG
             var (acertou, dano, critico) = jogo.AtacarMob();
 
 
-            ShowLoading(critico == true ? $"\nAtaque crítico! \nVocê acertou o inimigo e causou {dano} de dano!" : acertou ? $"\nVocê acertou o inimigo e causou {dano} de dano!" : "\nVocê errou o ataque!");
+            ShowLoading(critico ? $"\nAtaque crítico! \n{jogo.Personagem.Nome} acertou o inimigo e causou {dano} de dano!" : acertou ?
+                                  $"\n{jogo.Personagem.Nome} acertou o inimigo e causou {dano} de dano!" :
+                                  $"\n{jogo.Personagem.Nome} errou o ataque!");
         }
 
         static void AtacarPersonagem()
         {
             var (acertou, dano, critico) = jogo.AtacarPersonagem();
 
-            ShowLoading(critico == true ? $"\nAtaque crítico! \nO {jogo.HordaInimigo[0].Nome} acertou você e causou {dano} de dano!" : acertou ? $"\nO {jogo.HordaInimigo[0].Nome} acertou você e causou {dano} de dano!" : "\nO inimigo errou o ataque!");
+            ShowLoading(critico ? $"\nAtaque crítico! \nO {jogo.HordaInimigo[0].Nome} acertou {jogo.Personagem.Nome} e causou {dano} de dano!" : acertou ?
+                                  $"\nO {jogo.HordaInimigo[0].Nome} acertou {jogo.Personagem.Nome} e causou {dano} de dano!" :
+                                  $"\nO {jogo.HordaInimigo[0].Nome} errou o ataque!");
         }
         #endregion
 
@@ -262,12 +236,14 @@ namespace Micro_RPG
         static Mob? ExecutarCombate()
         {
             List<Mob> mobs;
+            string cabecalho = $"COMBATE - TURNO {jogo.Turno}";
 
             do
             {
                 Mob mob;
                 mobs = jogo.HordaInimigo;
 
+                ShowCabecalho(cabecalho);
                 AtacarInimigo();
 
                 if (mobs[0].Vida <= 0)
@@ -275,6 +251,7 @@ namespace Micro_RPG
                     return mob = jogo.VerificarMobDerrotado();
                 }
 
+                ShowCabecalho(cabecalho);
                 AtacarPersonagem();
 
             } while (mobs.Count() != 0 && !jogo.GameOver());
@@ -283,7 +260,54 @@ namespace Micro_RPG
         }
         #endregion
 
+        #region Bonus
+        static void EscolherBonus()
+        {
+            int opcao = 0;
+            string cabecalho = "ESCOLHA DE BONUS";
+            string mensagem = $"Bonus de vida escolhido! Vida aumentada em";
 
 
+            ShowCabecalho(cabecalho);
+            VisualizarStatus(false);
+            Console.WriteLine("\nEscolha seu bonus");
+            Console.WriteLine("1 - Vida");
+            Console.WriteLine("2 - Dano\n");
+            opcao = Convert.ToInt32(Console.ReadLine());
+
+            switch (opcao)
+            {
+                case 1:
+                    var bonusVida = jogo.EscolherBonus("vida");
+                    ShowLoading(bonusVida.critico ? $"Crítico!" : $"\nVida aumentada em {bonusVida.pontosGanhos}!", false);
+                    break;
+                case 2:
+                    var bonusDano = jogo.EscolherBonus("dano");
+                    ShowLoading(bonusDano.critico ? $"Crítico!" : $"\nDano aumentado em {bonusDano.pontosGanhos}!", false);
+                    break;
+            }
+        }
+        #endregion
+
+        #region GameOver
+        static void GameOver()
+        {
+            ShowCabecalho("GAME OVER");
+            ShowLoading($"\nVocê morreu!!! " +
+                        $"\nO jogo acabou!", false);
+        }
+        #endregion
+
+        #region VisualizarStatus
+        static void VisualizarStatus(bool visualizar)
+        {
+            if (visualizar)
+            {
+                ShowCabecalho("STATUS DO PERSONAGEM");
+            }
+
+            Console.WriteLine($"\n{jogo.Personagem.ToString()}");
+        }
+        #endregion
     }
 }
