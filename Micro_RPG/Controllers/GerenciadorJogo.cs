@@ -201,21 +201,21 @@ public class GerenciadorJogo
     /// </summary>
     /// <param name="nome">O nome do último mob derrotado.</param>
     /// <returns><c>true</c> se a horda foi derrotada e o turno foi concluído; caso contrário, <c>false</c>.</returns>
-    public bool TurnoConcluido(String? nome)
+    public (bool concluido, int vidaRecuperada) TurnoConcluido(String? nome)
     {
         if (_hordaInimigo.Count <= 0)
         {
-            RecuperarVida();
+            int vidaRecuperada= RecuperarVida().Cura;
 
             if (nome == "Goblin Hero")
             {
                 BonusDerrotaBoss();
             }
 
-            return true;
+            return (true, vidaRecuperada);
         }
 
-        return false;
+        return (false, 0);
     }
     #endregion
 

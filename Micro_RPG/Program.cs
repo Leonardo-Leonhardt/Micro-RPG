@@ -2,6 +2,7 @@
 using Micro_RPG.Models.Mobs;
 using Micro_RPG.Models.Factory;
 using Micro_RPG.Models.Personagens;
+using Micro_RPG.Models;
 
 namespace Micro_RPG
 {
@@ -107,12 +108,10 @@ namespace Micro_RPG
                 }
                 else if (mob != null)
                 {
-                    jogo.TurnoConcluido(mob.Nome);
+                    int vidaRecuperada = jogo.TurnoConcluido(mob.Nome).vidaRecuperada;
 
                     ShowCabecalho($"Turno {jogo.Turno} finalisado");
-
-                    Console.WriteLine($"\nPersonagem:" +
-                                      $"\n{jogo.Personagem.ToString()}");
+                    ShowLoading($"\n{jogo.Personagem.Nome} derrotou {mob.Nome} e recuperou {vidaRecuperada} de vida!!!", false);
 
                     EscolherBonus();
 
@@ -208,6 +207,14 @@ namespace Micro_RPG
                 ShowCabecalho(cabecalho);
                 ShowLoading("\n1 Boss criado.", false);
             }
+
+            for (int i = 0; i < jogo.HordaInimigo.Count; i++)
+            {
+                VisualizarStatus(false, jogo.HordaInimigo[i]);
+            }
+
+            Console.ReadKey();
+            ShowLoading("\nPressione qualquer tecla para iniciar o combate...", false);
         }
         #endregion
 
@@ -269,7 +276,7 @@ namespace Micro_RPG
 
 
             ShowCabecalho(cabecalho);
-            VisualizarStatus(false);
+            VisualizarStatus(false, jogo.Personagem);
             Console.WriteLine("\nEscolha seu bonus");
             Console.WriteLine("1 - Vida");
             Console.WriteLine("2 - Dano\n");
@@ -299,14 +306,14 @@ namespace Micro_RPG
         #endregion
 
         #region VisualizarStatus
-        static void VisualizarStatus(bool visualizar)
+        static void VisualizarStatus(bool visualizar, Entidade entidade)
         {
             if (visualizar)
             {
                 ShowCabecalho("STATUS DO PERSONAGEM");
             }
 
-            Console.WriteLine($"\n{jogo.Personagem.ToString()}");
+            Console.WriteLine($"\n{entidade.ToString()}");
         }
         #endregion
     }
