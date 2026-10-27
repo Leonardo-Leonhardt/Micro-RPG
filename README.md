@@ -194,7 +194,10 @@ Responsável por gerenciar o ciclo de vida do jogo, agregação das entidades e 
 Micro-RPG/
 ├── docs/
 │   └── diagramas/
-│       └── diagrama-classes-v1.png
+│       ├── diagrama-classes-v2.png
+│       └── historico/
+│           └── diagrama-classes-v1.png
+├── LICENSE
 └── Micro_RPG/
     ├── Controllers/
     │   └── GerenciadorJogo.cs
@@ -225,12 +228,15 @@ Micro-RPG/
 - [x] Ajustar o ganho de evolução do jogador (`EscolherBonus`) para não escalar rápido demais em relação aos inimigos
 - [x] Colocar o `Main` em um laço que avance automaticamente pelos turnos
 - [x] Ligar a criação do personagem (`CriarPersonagem`) ao fluxo do jogo
-- [ ] Adicionar novas classes jogáveis além do Guerreiro
 - [x] Adicionar Drop Duplo: o jogador recebe ambos os aprimoramentos (+HP Máximo E +Dano) ao derrotar o Goblin Hero
 - [x] Atualizar o diagrama de classes com as factories
+- [ ] Adicionar novas classes jogáveis além do Guerreiro
+- [ ] **Bug:** ao derrotar o Goblin Hero o jogador recupera vida e ganha os dois bônus automaticamente, mas o jogo ainda pede para escolher entre vida e dano — pular essa escolha nos turnos de chefe
+- [ ] Identificar cada inimigo quando houver mais de um na horda (ex.: "Goblin 1", "Goblin 2")
+- [ ] Exibir uma mensagem na tela a cada inimigo derrotado (ex.: "Goblin 1 morreu") e mostrar as recompensas (recuperação de vida e escolha de bônus) somente depois que toda a horda for eliminada
 
 ---
 
 ## 📄 Licença
 
-Este projeto ainda não possui uma licença definida.
+Este projeto está licenciado sob a [Licença MIT](LICENSE).
