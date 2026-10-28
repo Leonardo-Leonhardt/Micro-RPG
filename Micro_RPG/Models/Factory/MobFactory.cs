@@ -10,14 +10,15 @@ public static class MobFactory
     /// </summary>
     /// <param name="tipo">O tipo de mob a ser criado.</param>
     /// <param name="turno">O turno atual.</param>
+    /// <param name="num">O número do mob.</param>
     /// <returns>A instância do mob criado.</returns>
-    public static Mob CriarMob(string tipo, int turno)
+    public static Mob CriarMob(string tipo, int turno, int num)
     {
         return tipo.ToLower() switch
         {
-            "goblin hero" => new GoblinHero(turno),
-            "goblin" => new Goblin(turno),
-            "esqueleto" => new Esqueleto(turno),
+            "goblin hero" => new GoblinHero(turno, num),
+            "goblin" => new Goblin(turno, num),
+            "esqueleto" => new Esqueleto(turno, num),
             _ => throw new ArgumentException($"Tipo de mob desconhecido: {tipo}")
         };
     }

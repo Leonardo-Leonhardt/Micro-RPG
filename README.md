@@ -232,8 +232,8 @@ Micro-RPG/
 - [x] Atualizar o diagrama de classes com as factories
 - [ ] Adicionar novas classes jogáveis além do Guerreiro
 - [ ] **Bug:** ao derrotar o Goblin Hero o jogador recupera vida e ganha os dois bônus automaticamente, mas o jogo ainda pede para escolher entre vida e dano — pular essa escolha nos turnos de chefe
-- [ ] Identificar cada inimigo quando houver mais de um na horda (ex.: "Goblin 1", "Goblin 2")
-- [ ] Exibir uma mensagem na tela a cada inimigo derrotado (ex.: "Goblin 1 morreu") e mostrar as recompensas (recuperação de vida e escolha de bônus) somente depois que toda a horda for eliminada
+- [x] Identificar cada inimigo quando houver mais de um na horda (ex.: "Goblin 1", "Goblin 2")
+- [x] Exibir uma mensagem na tela a cada inimigo derrotado (ex.: "Goblin 1 morreu") e mostrar as recompensas (recuperação de vida e escolha de bônus) somente depois que toda a horda for eliminada
 
 ---
 

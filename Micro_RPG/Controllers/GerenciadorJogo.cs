@@ -37,7 +37,7 @@ public class GerenciadorJogo
 
         if (_turno % 5 == 0)
         {
-            _hordaInimigo.Add(MobFactory.CriarMob("Goblin Hero", _turno));
+            _hordaInimigo.Add(MobFactory.CriarMob("Goblin Hero", _turno, 1));
 
             return 0;
         }
@@ -46,7 +46,7 @@ public class GerenciadorJogo
 
         for (int i = 0; i < quantidadeMobs; i++)
         {
-            _hordaInimigo.Add(MobFactory.CriarMob(_nomeMobs[Random.Shared.Next(0, _nomeMobs.Length)], _turno));
+            _hordaInimigo.Add(MobFactory.CriarMob(_nomeMobs[Random.Shared.Next(0, _nomeMobs.Length)], _turno, i + 1));
         }
 
         return quantidadeMobs;
@@ -201,13 +201,13 @@ public class GerenciadorJogo
     /// </summary>
     /// <param name="nome">O nome do último mob derrotado.</param>
     /// <returns><c>true</c> se a horda foi derrotada e o turno foi concluído; caso contrário, <c>false</c>.</returns>
-    public (bool concluido, int vidaRecuperada) TurnoConcluido(String? nome)
+    public (bool concluido, int vidaRecuperada) TurnoConcluido(bool ehTurnoEspecial)
     {
         if (_hordaInimigo.Count <= 0)
         {
             int vidaRecuperada= RecuperarVida().Cura;
 
-            if (nome == "Goblin Hero")
+            if (ehTurnoEspecial)
             {
                 BonusDerrotaBoss();
             }

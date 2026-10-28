@@ -67,12 +67,11 @@ namespace Micro_RPG
                 {
                     GameOver();
                 }
-                else if (mob != null)
+                else if (mob == null)
                 {
-                    int vidaRecuperada = jogo.TurnoConcluido(mob.Nome).vidaRecuperada;
+                    int vidaRecuperada = jogo.TurnoConcluido(jogo.Turno % 5 == 0).vidaRecuperada;
 
-                    ShowCabecalho($"Turno {jogo.Turno} finalisado");
-                    ShowLoading($"\n{jogo.Personagem.Nome} derrotou {mob.Nome} e recuperou {vidaRecuperada} de vida!!!", false);
+                    ShowLoading($"\n{jogo.Personagem.Nome} recuperou {vidaRecuperada} de vida!!!", true);
 
                     EscolherBonus();
 
@@ -174,8 +173,8 @@ namespace Micro_RPG
                 VisualizarStatus(false, jogo.HordaInimigo[i]);
             }
 
-            Console.ReadKey();
             ShowLoading("\nPressione qualquer tecla para iniciar o combate...", false);
+            Console.ReadKey();
         }
         #endregion
 
@@ -208,7 +207,7 @@ namespace Micro_RPG
 
             do
             {
-                Mob mob;
+                Mob mob = null;
                 mobs = jogo.HordaInimigo;
 
                 ShowCabecalho(cabecalho);
@@ -216,12 +215,16 @@ namespace Micro_RPG
 
                 if (mobs[0].Vida <= 0)
                 {
-                    return mob = jogo.VerificarMobDerrotado();
+                    mob = jogo.VerificarMobDerrotado();
+                    ShowCabecalho($"Turno {jogo.Turno} finalisado");
+                    ShowLoading($"\n{jogo.Personagem.Nome} derrotou {mob.Nome}!!!", false);
+
                 }
-
-                ShowCabecalho(cabecalho);
-                AtacarPersonagem();
-
+                else if (mob == null)
+                {
+                    ShowCabecalho(cabecalho);
+                    AtacarPersonagem();
+                }
             } while (mobs.Count() != 0 && !jogo.GameOver());
 
             return null;
