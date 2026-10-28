@@ -110,13 +110,13 @@ Especialização de `Entidade` para criaturas hostis, centralizando os cálculos
   - `GeraDano(turnoAtual : int, danoBase : int, bonusDano : int) : int` — Calcula o dano progressivo por ciclo.
 
 #### `Goblin : Mob` (Classe Filha)
-- **Construtor:** `Goblin(turnoAtual : int)` — Instancia um monstro focado em evasão (20%), com vida e dano escalonados por ciclo.
+- **Construtor:** `Goblin(turnoAtual : int, num : int)` — Instancia um monstro focado em evasão (20%), com vida e dano escalonados por ciclo. O nome inclui o número do mob na horda (ex.: `Goblin 1`).
 
 #### `Esqueleto : Mob` (Classe Filha)
-- **Construtor:** `Esqueleto(turnoAtual : int)` — Instancia um monstro equilibrado e ofensivo (25 HP Base, 6 Dano Base).
+- **Construtor:** `Esqueleto(turnoAtual : int, num : int)` — Instancia um monstro equilibrado e ofensivo (25 HP Base, 6 Dano Base).
 
 #### `GoblinHero : Mob` (Classe Filha - Chefe)
-- **Construtor:** `GoblinHero(turnoAtual : int)` — Instancia o chefe da horda com vida e dano elevados (50 HP Base, 10 Dano Base).
+- **Construtor:** `GoblinHero(turnoAtual : int, num : int)` — Instancia o chefe da horda com vida e dano elevados (50 HP Base, 10 Dano Base).
 
 ---
 
@@ -126,7 +126,7 @@ Especialização de `Entidade` para criaturas hostis, centralizando os cálculos
 - `CriarPersonagem(tipo : string, nome : string) : Personagem` — Instancia o personagem correto a partir do tipo informado (atualmente suporta `"Guerreiro"`).
 
 #### `MobFactory`
-- `CriarMob(tipo : string, turno : int) : Mob` — Instancia o mob correto (`"Goblin"`, `"Esqueleto"` ou `"Goblin Hero"`) a partir do tipo e do turno atual.
+- `CriarMob(tipo : string, turno : int, num : int) : Mob` — Instancia o mob correto (`"Goblin"`, `"Esqueleto"` ou `"Goblin Hero"`) a partir do tipo, do turno atual e do número do mob na horda.
 
 ---
 
@@ -145,7 +145,7 @@ Responsável por gerenciar o ciclo de vida do jogo, agregação das entidades e 
   - `AtacarMob() : (bool Acertou, int Dano, bool Critico)` — Executa o ataque do jogador contra o primeiro mob da horda.
   - `AtacarPersonagem() : (bool Acertou, int Dano, bool Critico)` — Executa o ataque do primeiro mob da horda contra o jogador.
   - `VerificarMobDerrotado() : Mob?` — Verifica se o mob no topo da horda foi derrotado; em caso positivo, o remove da lista e o retorna (caso contrário, retorna `null`).
-  - `TurnoConcluido(nome : string?) : (bool concluido, int vidaRecuperada)` — Verifica se a horda ficou vazia; em caso positivo, aciona a recuperação de vida do jogador (retornando o quanto foi recuperado), concede a recompensa dupla (`BonusDerrotaBoss()`) quando `nome` for `"Goblin Hero"` e retorna `true`.
+  - `TurnoConcluido(ehTurnoEspecial : bool) : (bool concluido, int vidaRecuperada)` — Verifica se a horda ficou vazia; em caso positivo, aciona a recuperação de vida do jogador (retornando o quanto foi recuperado), concede a recompensa dupla (`BonusDerrotaBoss()`) quando `ehTurnoEspecial` for `true` (turno de chefe) e retorna `true`.
   - `GameOver() : bool` — Retorna `true` caso o HP do jogador seja `≤ 0`.
   - `Turno`, `NomePersonagem`, `Personagem`, `HordaInimigo` — Propriedades de leitura para o estado atual da partida.
 
@@ -230,10 +230,11 @@ Micro-RPG/
 - [x] Ligar a criação do personagem (`CriarPersonagem`) ao fluxo do jogo
 - [x] Adicionar Drop Duplo: o jogador recebe ambos os aprimoramentos (+HP Máximo E +Dano) ao derrotar o Goblin Hero
 - [x] Atualizar o diagrama de classes com as factories
-- [ ] Adicionar novas classes jogáveis além do Guerreiro
-- [ ] **Bug:** ao derrotar o Goblin Hero o jogador recupera vida e ganha os dois bônus automaticamente, mas o jogo ainda pede para escolher entre vida e dano — pular essa escolha nos turnos de chefe
 - [x] Identificar cada inimigo quando houver mais de um na horda (ex.: "Goblin 1", "Goblin 2")
 - [x] Exibir uma mensagem na tela a cada inimigo derrotado (ex.: "Goblin 1 morreu") e mostrar as recompensas (recuperação de vida e escolha de bônus) somente depois que toda a horda for eliminada
+- [ ] Adicionar novas classes jogáveis além do Guerreiro
+- [ ] Atualizar o diagrama de classes (nova versão): construtores dos mobs com o parâmetro `num`, `MobFactory.CriarMob(tipo, turno, num)` e `TurnoConcluido(ehTurnoEspecial : bool)`
+- [ ] **Bug:** ao derrotar o Goblin Hero o jogador recupera vida e ganha os dois bônus automaticamente, mas o jogo ainda pede para escolher entre vida e dano — pular essa escolha nos turnos de chefe
 
 ---
 

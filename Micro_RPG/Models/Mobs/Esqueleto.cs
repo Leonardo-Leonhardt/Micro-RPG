@@ -12,7 +12,7 @@ public class Esqueleto : Mob
     /// <param name="num">O número do Esqueleto.</param>
     public Esqueleto(int turnoAtual, int num) 
         : base(
-            nome: "Esqueleto",
+            nome: $"Esqueleto {num}",
             vida: GeraVida(turnoAtual, vidaBase: 25, bonusVida: 5),
             dano: GeraDano(turnoAtual, danoBase: 6, bonusDano: 7),
             chanCritico: 0.05,
