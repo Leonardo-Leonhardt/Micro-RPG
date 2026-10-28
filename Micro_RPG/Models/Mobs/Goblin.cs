@@ -9,9 +9,10 @@ public class Goblin : Mob
     /// Inicializa uma nova instância do Goblin.
     /// </summary>
     /// <param name="turnoAtual">O turno atual.</param>
-    public Goblin(int turnoAtual)
+    /// <param name="num">O número do Goblin.</param>
+    public Goblin(int turnoAtual, int num)
         : base(
-            nome: "Goblin",
+            nome: $"Goblin {num}",
             vida: GeraVida(turnoAtual, vidaBase: 15, bonusVida: 8),
             dano: GeraDano(turnoAtual, danoBase: 3, bonusDano: 4),
             chanCritico: 0.10,

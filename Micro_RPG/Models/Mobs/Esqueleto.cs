@@ -9,7 +9,8 @@ public class Esqueleto : Mob
     /// Inicializa uma nova instância do Esqueleto.
     /// </summary>
     /// <param name="turnoAtual">O turno atual.</param>
-    public Esqueleto(int turnoAtual) 
+    /// <param name="num">O número do Esqueleto.</param>
+    public Esqueleto(int turnoAtual, int num) 
         : base(
             nome: "Esqueleto",
             vida: GeraVida(turnoAtual, vidaBase: 25, bonusVida: 5),
